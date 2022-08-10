@@ -1,30 +1,56 @@
 $(function() {
 
+    //load ajax address
+    $(document).on('change', '#city', function() {
+        let urlRequest = $(this).data("url");
+        let mythis = $(this);
+        let value = $(this).val();
+        let defaultCity = "<option value=''>Chọn thành phố</option>";
+        let defaultDistrict = "<option value=''>Chọn quận huyện</option>";
+        if (!value) {
+            $('#district').html(defaultDistrict);
+        } else {
+            $.ajax({
+                type: "GET",
+                url: urlRequest,
+                data: { 'cityId': value },
+                success: function(data) {
+                    if (data.code == 200) {
+                        let html = defaultDistrict + data.data;
+                        $('#district').html(html);
+                    }
+                }
+            });
+        }
+    })
+    
+
     // js load ảnh khi upload
     $(document).on('change', '.img-load-input', function() {
         let input = $(this);
         displayImage(input, '.wrap-load-image', '.img-load');
     });
+    
     function displayImage(input, selectorWrap, selectorImg) {
-        input.parents(selectorWrap).find(selectorImg).remove();
-    
-        let file = input.prop('files')[0];
-        let reader = new FileReader();
-    
-        reader.addEventListener("load", function() {
-            // convert image file to base64 string
-            let img = $('<img />');
-            img.attr({
-                'src': reader.result,
-                'alt': file.name,
-            });
-            input.parents(selectorWrap).append(img);
-        }, false);
-    
-        if (file) {
-            reader.readAsDataURL(file);
-        }
+    input.parents(selectorWrap).find(selectorImg).remove();
+
+    let file = input.prop('files')[0];
+    let reader = new FileReader();
+
+    reader.addEventListener("load", function() {
+        // convert image file to base64 string
+        let img = $('<img />');
+        img.attr({
+            'src': reader.result,
+            'alt': file.name,
+        });
+        input.parents(selectorWrap).append(img);
+    }, false);
+
+    if (file) {
+        reader.readAsDataURL(file);
     }
+}
     // js load nhiều ảnh khi upload
     $(document).on('change', '.img-load-input-multiple', function() {
         let input = $(this);
@@ -77,14 +103,14 @@ $(function() {
     // end js  show childs category đệ quy
 
     // js create select tag
-    $(".tag-select-choose").select2({
-        tags: true,
-        tokenSeparators: [','],
-    });
-    $(".select-2-init").select2({
-        placeholder: "--- Chọn danh mục ---",
-        allowClear: true,
-    });
+    // $(".tag-select-choose").select2({
+    //     tags: true,
+    //     tokenSeparators: [','],
+    // });
+    // $(".select-2-init").select2({
+    //     placeholder: "--- Chọn danh mục ---",
+    //     allowClear: true,
+    // });
     // end create select tag
 
     // js tinymce
@@ -130,6 +156,82 @@ $(function() {
     // end  tinymce
 
     // js load change trạng thái hot và active
+    // $(document).on('click', '.lb-active', function() {
+    //     event.preventDefault();
+    //     let wrapActive = $(this).parents('.wrap-load-active');
+    //     let urlRequest = wrapActive.data("url");
+    //     console.log(urlRequest);
+    //     let value = $(this).data("value");
+    //     let type = $(this).data("type");
+    //     let title = '';
+    //     if (value) {
+    //         title = 'Bạn có chắc chắn muốn ẩn ' + type;
+    //     } else {
+    //         title = 'Bạn có chắc chắn muốn hiển thị ' + type;
+    //     }
+    //     Swal.fire({
+    //         title: title,
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: 'Yes, next step!'
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             $.ajax({
+    //                 type: "GET",
+    //                 url: urlRequest,
+    //                 success: function(data) {
+    //                     if (data.code == 200) {
+    //                         let html = data.html;
+    //                         wrapActive.html(html);
+    //                     }
+    //                 }
+    //             });
+    //         }
+    //     })
+    // });
+
+    $(document).on("click", ".lb_delete", actionDelete);
+
+        function actionDelete(event) {
+
+            event.preventDefault();
+            let urlRequest = $(this).data("url");
+            let mythis = $(this);
+            Swal.fire({
+                title: 'Bạn có chắc chắn muốn xóa',
+                text: "Bạn sẽ không thể khôi phục điều này",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "GET",
+                        url: urlRequest,
+                        success: function(data) {
+                            if (data.code == 200) {
+
+                                mythis.parents("tr").remove();
+                            }
+                        },
+                        error: function() {
+
+                        }
+                    });
+                    // Swal.fire(
+                    // 'Deleted!',
+                    // 'Your file has been deleted.',
+                    // 'success'
+                    // )
+                }
+            })
+        }
+
+    // js load change trạng thái hot và active
     $(document).on('click', '.lb-active', function() {
         event.preventDefault();
         let wrapActive = $(this).parents('.wrap-load-active');
@@ -138,32 +240,35 @@ $(function() {
         let value = $(this).data("value");
         let type = $(this).data("type");
         let title = '';
-        if (value) {
-            title = 'Bạn có chắc chắn muốn ẩn ' + type;
-        } else {
-            title = 'Bạn có chắc chắn muốn hiển thị ' + type;
-        }
-        Swal.fire({
-            title: title,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, next step!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "GET",
-                    url: urlRequest,
-                    success: function(data) {
-                        if (data.code == 200) {
-                            let html = data.html;
-                            wrapActive.html(html);
-                        }
-                    }
-                });
+
+        $.ajax({
+            type: "GET",
+            url: urlRequest,
+            success: function(data) {
+                if (data.code == 200) {
+                    let html = data.html;
+                    wrapActive.html(html);
+                }
             }
-        })
+        });
+    });
+
+    // js load change trạng thái hot và role
+    $(document).on('click', '.lb-role', function() {
+        event.preventDefault();
+        let wrapActive = $(this).parents('.wrap-load-role');
+        let urlRequest = wrapActive.data("url");
+
+        $.ajax({
+            type: "GET",
+            url: urlRequest,
+            success: function(data) {
+                if (data.code == 200) {
+                    let html = data.html;
+                    wrapActive.html(html);
+                }
+            }
+        });
     });
 
     $(document).on('click', '.lb-default', function() {

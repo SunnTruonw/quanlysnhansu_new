@@ -11,4 +11,9 @@ class Room extends Model
 
     protected $guarded = [];
 
+
+    public function users()
+    {
+        return $this->hasMany(User::class, "room_id", "id");
+    }
 }

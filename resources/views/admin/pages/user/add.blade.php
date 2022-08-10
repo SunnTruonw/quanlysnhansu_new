@@ -61,43 +61,16 @@
                                                     <div class="row">
                                                         <label for="" class="col-sm-2">Tên nhân viên</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control nameChangeSlug
+                                                            <input type="text" class="form-control
                                                             @error('name') is-invalid @enderror" id="name" value="{{ old('name') }}" name="name" placeholder="Nhập tên nhân viên">
                                                             @error('name')
-                                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                                <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                                             @enderror
                                                         </div>
 
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <label for="" class="col-sm-2">Đường dẫn</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" class="form-control resultSlug
-                                                            @error('slug') is-invalid @enderror" id="slug" value="{{ old('slug') }}" name="slug" placeholder="Nhập đường dẫn">
-                                                            @error('slug')
-                                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                            @enderror
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <label for="" class="col-sm-2">Email</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" class="form-control
-                                                            @error('email') is-invalid @enderror" id="email" value="{{ old('email') }}" name="email" placeholder="Nhập email">
-                                                            @error('email')
-                                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-                                                </div>
-            
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <label for="" class="col-sm-2">Số điện thoại</label>
@@ -105,10 +78,36 @@
                                                             <input type="text" class="form-control
                                                             @error('phone') is-invalid @enderror" id="phone" value="{{ old('phone') }}" name="phone" placeholder="Nhập sô điện thoại">
                                                             @error('phone')
-                                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                                <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                                             @enderror
                                                         </div>
                                                     </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <label for="" class="col-sm-2">Tỉnh/TP <strong>*</strong></label>
+                                                    <div class="col-sm-10">
+                                                        <select name="city_id" id="city" class="form-control @error('city_id') is-invalid   @enderror" data-url="{{ route('ajax.address.districts') }}">
+                                                            <option value="">Chọn tỉnh/Thành phố</option>
+                                                            {!! $cities !!}
+                                                        </select>
+                                                        @error('city_id')
+                                                            <div class="invalid-feedback"><strong>{{ $message }}</strong>S</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="" class="col-sm-2">Quận/huyện <strong>*</strong></label>
+                                                    <div class="col-sm-10">
+                                                        <select name="district_id" id="district" class="form-control    @error('district_id') is-invalid   @enderror">
+                                                            <option value="">Chọn quận/huyện</option>
+                                                        </select>
+                                                        @error('district_id')
+                                                            <div class="invalid-feedback"><strong>{{ $message }}</strong></div>
+                                                        @enderror
+                                                    </div>
+
+                                                    
                                                 </div>
 
                                                 <div class="form-group">
@@ -118,7 +117,7 @@
                                                             <input type="text" class="form-control
                                                             @error('address') is-invalid @enderror" id="address" value="{{ old('address') }}" name="address" placeholder="Nhập địa chỉ">
                                                             @error('address')
-                                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                                <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                                             @enderror
                                                         </div>
                                                     </div>
@@ -131,7 +130,7 @@
                                                             <textarea type="text" rows="4" class="form-control
                                                             @error('description') is-invalid @enderror" id="description" value="" placeholder="Nhập mô tả" name="description">{{ old('description') }}</textarea>
                                                             @error('description')
-                                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                                <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                                             @enderror
                                                         </div>
                                                     </div>
@@ -144,7 +143,7 @@
                                                             <textarea type="text" rows="4" class="form-control
                                                             @error('content') is-invalid @enderror" id="content" value="" placeholder="Nhập nội dung" name="content">{{ old('content') }}</textarea>
                                                             @error('content')
-                                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                                <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                                             @enderror
                                                         </div>
                                                     </div>
@@ -157,10 +156,10 @@
                                                         is-invalid
                                                         @enderror" id="" name="avatar_path">
                                                         @error('avatar_path')
-                                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                            <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                                         @enderror
                                                     </div>
-                                                    <img class="img-load border p-1 w-100" src="{{asset('admin_asset/images/upload-image.png')}}" style="height: 200px;object-fit:cover; max-width: 260px;">
+                                                    <img class="img-load border p-1 w-100" src="{{asset('admin_asset/images/upload-image.png')}}" style="height: 100px;object-fit:cover; max-width: 100px;">
                                                 </div>
 
                                                 <div class="wrap-load-image mb-3">
@@ -170,10 +169,10 @@
                                                         is-invalid
                                                         @enderror" id="" name="image_path">
                                                         @error('image_path')
-                                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                        <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                                         @enderror
                                                     </div>
-                                                    <img class="img-load border p-1 w-100" src="{{asset('admin_asset/images/upload-image.png')}}" style="height: 200px;object-fit:cover; max-width: 260px;">
+                                                    <img class="img-load border p-1 w-100" src="{{asset('admin_asset/images/upload-image.png')}}" style="height: 100px;object-fit:cover; max-width: 100px;">
                                                 </div>
                                             </div>
 
@@ -189,7 +188,7 @@
                                                     is-invalid
                                                     @enderror" id="" name="file">
                                                     @error('file')
-                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                    <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                                     @enderror
                                                 </div>
                                             </div>
@@ -225,12 +224,28 @@
                                     @endif
 
                                     <div class="form-group">
+                                        <label class="control-label" for="">Chọn phòng ban</label>
+                                        <select class="form-control" name="room_id">
+                                            <option value="">--Chọn phòng ban--</option>
+                                            @if(isset($rooms) && $rooms)
+                                                @foreach ($rooms as $room)
+                                                    <option @if (old('room_id')) {{ old('room_id')?'selected':"" }} @endif value="{{$room->id}}">{{$room->name}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+
+
+                                    <div class="form-group">
                                         <label class="control-label" for="">Giới tính</label>
                                         <select class="form-control"   name="sex" id="sex">
-                                            <option value="">Giới tính</option>
+                                            <option value="">--Giới tính--</option>
                                             <option @if (old('sex')) {{ old('sex')?'selected':"" }} @endif value="1">Nam</option>
                                             <option @if (old('sex')) {{ old('sex')?'selected':"" }} @endif value="0">Nữ</option>
                                         </select>
+                                        @error('sex')
+                                            <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
+                                        @enderror
                                     </div>
 
 
@@ -241,7 +256,7 @@
                                                 <input type="date" class="form-control
                                                 @error('date_working') is-invalid @enderror" id="date_working" value="{{ old('date_working') }}" name="date_working" placeholder="Nhập ngày vào làm">
                                                 @error('date_working')
-                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                    <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                                 @enderror
                                             </div>
                                         </div>
@@ -254,22 +269,12 @@
                                                 <input type="date" class="form-control
                                                 @error('date_off') is-invalid @enderror" id="date_off" value="{{ old('date_off') }}" name="date_off" placeholder="Nhập ngày nghỉ việc">
                                                 @error('date_off')
-                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                    <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                                 @enderror
                                             </div>
                                         </div>
                                     </div>
                                     
-                                    <div class="form-group">
-                                        <label class="control-label" for="">Số thứ tự</label>
-
-                                        <input type="number" min="0" class="form-control  @error('order') is-invalid  @enderror"  value="{{ old('order') }}" name="order" placeholder="Nhập số thứ tự">
-
-                                        @error('order')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
                                     <div class="form-group">
                                         <label class="control-label" for="">Trạng thái</label>
                                         <div class="form-check-inline">
@@ -283,11 +288,76 @@
                                             </label>
                                         </div>
                                         @error('active')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                         @enderror
                                     </div>
 
                                     <hr>
+                                 </div>
+
+                                 
+                            </div>
+
+                            <div class="card card-outline card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">Tạo tài khoản</h3>
+                                </div>
+                                <div class="card-body table-responsive p-3">
+                                    <div class="item-price-default">
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="" class="col-sm-3">Use Email</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control
+                                                    @error('email') is-invalid @enderror" id="email" value="{{ old('email') }}" name="email" placeholder="Nhập email">
+                                                    @error('email')
+                                                        <div class="invalid-feedback d-block"><strong>{{ $message }}</strong>
+                                                        </div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="password" class="col-md-3">Mật khẩu</label>
+                                                <div class="col-md-9">
+                                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Nhập mật khẩu">
+                                                    @error('password')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="confirm-password" class="col-md-3">Nhập lại mật khẩu</label>
+                                                <div class="col-md-9">
+                                                    <input id="confirm-password" type="password" class="form-control @error('confirm-password') is-invalid @enderror" name="confirm-password" placeholder="Nhập lại mật khẩu" >
+                                                    @error('confirm-password')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label" for="">Chức vụ</label>
+                                            <select class="form-control" name="role">
+                                                <option value="user" selected>Nhân viên</option>
+                                                <option value="admin">Admin</option>
+                                            </select>
+                                        </div>
+                                      
+                                    </div>
+
                                  </div>
                             </div>
                         </div>

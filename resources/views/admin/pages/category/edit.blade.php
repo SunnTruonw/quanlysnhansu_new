@@ -128,7 +128,7 @@
                                                 </div>
                                                 @if($data->avatar_path)
                                                     <img class="img-load border p-1 w-100" src="{{asset($data->avatar_path)}}" style="height: 200px;object-fit:cover; max-width: 260px;">
-                                                @els
+                                                @else
                                                     <img class="img-load border p-1 w-100" src="{{asset('admin_asset/images/upload-image.png')}}" style="height: 200px;object-fit:cover; max-width: 260px;">
                                                 @endif
                                             </div>

@@ -30,6 +30,19 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
 
 </head>
+
+<style>
+  ul{
+    list-style: none;
+    padding: 0;
+  }
+  i.fas.fa-folder{
+    color: #e5ba1e;
+  }
+  .alert-danger-cus{
+    color: red;
+  }
+</style>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
@@ -64,7 +77,6 @@
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
-
 <!-- jQuery -->
 <script src="{{asset('admin_asset/plugins/jquery/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -95,16 +107,20 @@
 <script src="{{asset('admin_asset/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('admin_asset/dist/js/adminlte.js')}}"></script>
-
+{{-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script> --}}
 <!-- -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 <!-- MainJS -->
 <script src="{{asset('admin_asset/asset/js/main.js')}}"></script>
 
 
+
+
 <!-- AdminLTE for demo purposes -->
 {{-- <script src="{{admin('admin_asset/dist/js/demo.js')}}"></script> --}}
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('admin_asset/dist/js/pages/dashboard.js')}}"></script>
+
+@yield('js')
 </body>
 </html>

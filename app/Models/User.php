@@ -48,46 +48,40 @@ class User extends Authenticatable
     // tạo thêm thuộc tính sex
     public function getSexAttribute()
     {
-        return $this->docmment->sex;
+        return $this->docmments()->first()->sex;
     }
 
-    // tạo thêm thuộc tính address
-    public function getAddressAttribute()
+    // tạo thêm thuộc tính description
+    public function getDescriptionAttribute()
     {
-        return $this->docmment->address;
+        return $this->docmments()->first()->description;
     }
 
-    // tạo thêm thuộc tính email
-    public function getEmailAttribute()
+    // tạo thêm thuộc tính content
+    public function getContentAttribute()
     {
-        return $this->docmment->email;
+        return $this->docmments()->first()->content;
     }
 
-    // tạo thêm thuộc tính phone
-    public function getPhoneAttribute()
-    {
-        return $this->docmment->phone;
-    }
 
     // tạo thêm thuộc tính date_working
     public function getDateWorkingAttribute()
     {
-        return $this->docmment->date_working;
+        return $this->docmments()->first()->date_working;
     }
 
     // tạo thêm thuộc tính date_off
     public function getDateOffAttribute()
     {
-        return $this->docmment->date_off;
+        return $this->docmments()->first()->date_off;
     }
 
     // tạo thêm thuộc tính image_path
     public function getImagePathAttribute()
     {
-        return $this->docmment->image_path;
+        return $this->docmments()->first()->image_path;
     }
     
-
     public function docmments()
     {
         return $this->hasMany(Documment::class, "user_id", "id");
@@ -102,5 +96,16 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Category::class, CategoryUser::class, 'user_id', 'category_id')
             ->withTimestamps();
+    }
+
+
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id', 'id');
+    }
+
+    public function district()
+    {
+        return  $this->belongsTo(Distrist::class, 'district_id', 'id');
     }
 }

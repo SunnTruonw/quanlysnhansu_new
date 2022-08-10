@@ -15,10 +15,8 @@ class CreateDocummentsTable extends Migration
     {
         Schema::create('documments', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique();
-            $table->string('phone')->unique();
-            $table->tinyInteger('sex')->default(1)->comment('Giới tính true->Nam, false->Nữ');
-            $table->string('address');
+            $table->text('description')->nullable()->comment('Mô tả');
+            $table->text('content')->nullable()->comment('Chi tiết');
             $table->date('date_working')->comment('Ngày vào làm');
             $table->date('date_off')->comment('Ngày nghỉ việc');
             $table->integer('user_id');

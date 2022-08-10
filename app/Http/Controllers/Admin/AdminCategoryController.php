@@ -118,8 +118,7 @@ class AdminCategoryController extends Controller
         $parentId = $data->parent_id;
         $htmlselect = $this->category->getHtmlOptionEdit($parentId, $id);
 
-
-        $categories = $this->category->where('active', 1)->orderBy('order')->latest()->get();
+       $categories = $this->category->where('active', 1)->orderBy('order')->latest()->get();
 
         $data = $this->category->find($id);
         return view('admin.pages.category.edit',[

@@ -16,9 +16,9 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slug')->unique();
-            $table->text('description');
-            $table->text('content');
+            $table->string('slug');
+            $table->text('description')->nullable();
+            $table->text('content')->nullable();
             $table->string('avatar_path')->nullable();
             $table->integer('parent_id');
             $table->tinyInteger('active')->default(1)->comment('Trạng thái true -> hiển thị, fasle -> ẩn');
