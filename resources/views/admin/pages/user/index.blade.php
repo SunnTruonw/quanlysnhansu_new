@@ -92,62 +92,74 @@
                   <div class="card-body table-responsive p-0 lb-list-category">
                       <table class="table table-head-fixed" style="font-size: 13px;">
                           <thead>
-                              <tr>
-                                  <th>STT</th>
-                                  <th>Tên nhân viên</th>
-                                  <th class="white-space-nowrap">Hình ảnh</th>
-                                  <th class="white-space-nowrap">Mô tả</th>
-                                  <th class="white-space-nowrap">Active</th>
-                                  {{-- <th class="white-space-nowrap">Danh mục</th> --}}
-                                  <th>Action</th>
-                              </tr>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã nhân viên</th>
+                                    <th>Tên nhân viên</th>
+                                    <th>Tài khoản</th>
+                                    <th>Điện thoại</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Phòng ban</th>
+                                    <th>Chức danh</th>
+                                    <th>Mức lương</th>
+                                    <th class="white-space-nowrap">Trạng thái</th>
+                                    <th>Hành động</th>
+                                </tr>
                           </thead>
                           <tbody>
                               @foreach($data as $item)
                                   {{-- {{dd($item->category)}} --}}
-                              <tr>
-                                  <td>{{$loop->index}}</td>
-                                  <td><ul>
-                                     <li>
-                                       <strong>Họ tên:</strong>  {{ $item->name }}
-                                     </li>
-                                     <li>
-                                      <strong>Số điện thoại:</strong>   {{ $item->phone }}
-                                     </li>
-                                     <li>
-                                      <strong>Email:</strong>   {{ $item->email }}
-                                     </li>
-                                     <li>
-                                    @if($item->district || $item->city)
-                                    <strong>Địa chỉ:</strong>    {{ $item->address }} ,{{ $item->district->name ?? '' }}, {{ $item->city->name ?? '' }}
-                                    @else
-                                    <strong>Địa chỉ:</strong>    {{ $item->address }}
-
-                                    @endif
-                                    </li>
-
-                                    <li>
-                                        <strong>Ngày vào làm:</strong>   {{ Carbon\Carbon::parse($item->date_working)->format('d-m-Y') }}
-                                       </li>
+                                  <tr>
+                                    <td>{{$loop->index}}</td>
+                                    <td>{{$item->user_code}}</td>
+                                    <td><a href="{{route('admin.user.detail',['id'=>$item->id])}}">{{$item->name}}</a></td>
+                                    <td>{{$item->email}}</td>
+                                    <td>{{$item->phone}}</td>
+                                    <td>{{ $item->address }} ,{{ $item->district->name }}, {{ $item->city->name }}</td>
+                                    <td>{{$item->room->name}}</td>
+                                    <td  class="wrap-load-role @if($authCheck->id == $item->id || $authCheck->role == 'admin')  @else unselectable  @endif" data-url="{{ route('admin.user.load.role',['id'=>$item->id]) }}">
+                                        @include('admin.components.load-change-role',['data'=>$item,'type'=>'nhân viên'])
+                                    </td>
+                                    <td>{{number_format($item->wage)}} VNĐ</td>
                                     
-                                 </ul></td>
-                                    <td>
-                                        <img src="{{$item->avatar_path?asset($item->avatar_path): $shareFrontend['noImage']}}"
-                                        alt="{{$item->name}}" style="width:100px;height: 100px;">
+                                    <td class="wrap-load-active @if($authCheck->id == $item->id || $authCheck->role == 'admin')  @else unselectable  @endif" data-url="{{ route('admin.user.load.active',['id'=>$item->id]) }}">
+                                        @include('admin.components.load-change-active',['data'=>$item,'type'=>'nhân viên'])
                                     </td>
+                                    
                                     <td>
-                                        {{$item->description}}
-                                    </td>
 
-                                    <td class="wrap-load-active" data-url="{{ route('admin.user.load.active',['id'=>$item->id]) }}">
-                                        @include('admin.components.load-change-active',['data'=>$item,'type'=>'danh mục'])
-                                    </td>
-                                    {{-- <td>{{optional($item->category)->name == 0 ? 'Danh mục cha' : $item->category->name}}</td>  --}}
-                                    <td>
                                         <a href="{{route('admin.user.edit',['id'=>$item->id])}}" class="btn btn-sm btn-info"><i class="fas fa-edit"></i></a>
+                                        {{-- <a  class="btn btn-sm btn-info" id="btn-load-calendar-detail" data-url="{{route('admin.user.calendar',['id'=>$item->id])}}" ><i class="far fa-calendar"></i></a>                         --}}
+                                        <a  class="btn btn-sm btn-info" id="btn-load-user-detail" data-id="{{$item->id}}" data-url="{{route('admin.user.detail',['id'=>$item->id])}}" ><i class="fas fa-eye"></i></a>
                                         <a data-url="{{route('admin.user.delete',['id'=>$item->id])}}" class="btn btn-sm btn-danger lb_delete"><i class="far fa-trash-alt"></i></a>
                                     </td>
-                              </tr>
+                                </tr>
+
+                                <!-- The Modal chi tiết nhân viên -->
+                                <div class="modal fade in" id="userDetail{{$item->id}}">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                        <h4 class="modal-title">Chi tiết nhân viên</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <div class="content" id="loadUserDetail{{$item->id}}">
+                                                
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
                               @endforeach
                           </tbody>
                       </table>
@@ -160,6 +172,7 @@
       </div>
     </div>
   </div>
+
   
 
 @endsection

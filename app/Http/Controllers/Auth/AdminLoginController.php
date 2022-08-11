@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Helper\AddressHelper;
+use App\Http\Requests\Admin\AdminLoginRequest;
 
 use App\Models\Category;
 use App\Models\City;
@@ -17,6 +18,7 @@ use App\Models\Documment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+
 class AdminLoginController extends Controller
 {
     private $user;
@@ -38,36 +40,42 @@ class AdminLoginController extends Controller
 
     public function showLoginForm()
     {
-        return view('auth.admin_login');
+        if (Auth::check()) {
+            return view('admin.pages.index');
+        } else {
+            return view('auth.admin_login');
+        }
     }
 
     public function login(Request $request)
     {
-        // validate the form data
         $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required|min:6',
+            'email' => 'required',
+            'password' => 'required|min:8',
         ]);
-        // attempt to log the user in
-        if (Auth::attempt([
+
+
+        $login = [
             'email' => $request->email,
             'password' => $request->password,
-        ], $request->remember)) {
-            //  return redirect()->intended('/admin');
-            return redirect()->intended('/admin');
+        ];
+
+        if (Auth::attempt($login)) {
+            return redirect('/admin');
+        } else {
+            return redirect()->back()->with('status', 'Email hoặc Password không chính xác');
         }
-        // if unsuccessful, then redirect back to the login with the form data
-        return redirect()->back()->withInput($request->only('email', 'remember'));
     }
 
     public function logout(Request $request)
     {
         Auth::logout();
-        return redirect('/admin/login');
+        return redirect()->route('admin.login');
     }
 
     public function showActiveUserForm(Request $request)
     {
+        $authCheck = \Auth::user();
         $params = $request->all();
 
         $address = new AddressHelper();
@@ -84,6 +92,17 @@ class AdminLoginController extends Controller
             $data = $data->where(function ($query) use ($params) {
                 $query->where([
                     ['name', 'like', '%' . $params['keyword'] . '%']
+                ])->orWhere([
+                    ['user_code', 'like', '%' . $params['keyword'] . '%']
+                ])
+                ->orWhere([
+                    ['email', 'like', '%' . $params['keyword'] . '%']
+                ])
+                ->orWhere([
+                    ['phone', 'like', '%' . $params['keyword'] . '%']
+                ])
+                ->orWhere([
+                    ['address', 'like', '%' . $params['keyword'] . '%']
                 ]);
             });
         }
@@ -127,6 +146,7 @@ class AdminLoginController extends Controller
 
         return view('admin.pages.user.admin-show-active-user',[
             'data' => $data,
+            'authCheck' => $authCheck,
             'dataCity' => $dataCity,
             'totalCategory' => $totalCategory,
             'keyword' => $request->input('keyword') ?? '',
@@ -140,7 +160,7 @@ class AdminLoginController extends Controller
 
     public function loadActiveUser($id)
     {
-        // dd($id);
+        $authCheck = \Auth::user();
         $user   =  $this->user->find($id);
         $role = $user->role;
         if ($role=='user') {
@@ -157,7 +177,7 @@ class AdminLoginController extends Controller
         if ($updateResult) {
             return response()->json([
                 "code" => 200,
-                "html" => view('admin.components.load-change-role', ['data' => $user, 'type' => 'nhân viên'])->render(),
+                "html" => view('admin.components.load-change-role', ['data' => $user, 'type' => 'nhân viên','authCheck' => $authCheck])->render(),
                 "message" => "success"
             ], 200);
         } else {

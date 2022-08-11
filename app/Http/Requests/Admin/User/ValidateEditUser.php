@@ -32,7 +32,7 @@ class ValidateEditUser extends FormRequest
             "sex" => "required",
             "address" => "required",
             'email' => 'required', 'string', 'email', 'max:255',
-            'phone' => 'required|min:11|numeric',
+            'phone' => 'required',
             "date_working" => "required",
             "date_off" => "nullable",
             "order" => "nullable|numeric",
@@ -59,8 +59,8 @@ class ValidateEditUser extends FormRequest
             "email.required" => "Email không được bỏ trống",
             "phone.required" => "Số điện thoại không được bỏ trống",
             "phone.required" => "Số điện thoại không được bỏ trống",
-            "phone.min" => "Số điện thoại không hợp lệ",
-            "phone.numeric" => "Số điện thoại không hợp lệ",
+            // "phone.min" => "Số điện thoại không hợp lệ",
+            // "phone.numeric" => "Số điện thoại không hợp lệ",
             "date_working.required" => "Ngày vào làm không được bỏ trống",
             "order.numeric" => "Số thứ tự không hợp lệ",
 
@@ -69,3 +69,5 @@ class ValidateEditUser extends FormRequest
         ];
     }
 }
+
+

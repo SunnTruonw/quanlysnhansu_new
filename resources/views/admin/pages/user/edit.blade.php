@@ -30,8 +30,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="card-tool p-3 text-right">
-                                <button type="submit" class="btn btn-primary btn-lg">Chấp nhận</button>
-                                <button type="reset" class="btn btn-danger btn-lg">Làm lại</button>
+                                <button type="submit" @if($authCheck->id == $data->id || $authCheck->role == 'admin')  @else disabled  @endif class="btn btn-primary btn-sm">Chấp nhận</button>
+                                <button type="reset" class="btn btn-danger btn-sm">Làm lại</button>
                             </div>
                         </div>
                     </div>
@@ -301,15 +301,28 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <div class="row">
+                                            <label for="" class="col-sm-3">Lương</label>
+                                            <div class="col-sm-9">
+                                                <input type="number" class="form-control
+                                                @error('wage') is-invalid @enderror" id="wage" value="{{ old('wage') ?? $data->wage }}" name="wage" placeholder="Nhập mức lương">
+                                                @error('wage')
+                                                    <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label class="control-label" for="">Trạng thái</label>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" value="1" name="active" @if(old('active')==='1' ||old('active')===null) {{'checked'}} @endif>Hiện
+                                            <input type="radio" class="form-check-input" value="1" name="active" @if(old('active')==='1' ||old('active')===null) {{'checked'}} @endif>Đang làm
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" class="form-check-input" value="0" @if(old('active')==="0" ){{'checked'}} @endif name="active">Ẩn
+                                                <input type="radio" class="form-check-input" value="0" @if(old('active')==="0" ){{'checked'}} @endif name="active">Nghỉ việc
                                             </label>
                                         </div>
                                         @error('active')

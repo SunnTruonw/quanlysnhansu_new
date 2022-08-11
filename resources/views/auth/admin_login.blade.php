@@ -61,6 +61,20 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">Đăng nhập hệ thống quản trị</div>
+
+                @if (count($errors) >0)
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li class="text-danger"> {{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+
+                @if (session('status'))
+                    <ul>
+                        <li class="text-danger"> {{ session('status') }}</li>
+                    </ul>
+                @endif
                 <div class="card-body">
                     <form method="POST" action="{{ route('admin.login.submit') }}">
                         @csrf

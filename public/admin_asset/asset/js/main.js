@@ -194,42 +194,42 @@ $(function() {
 
     $(document).on("click", ".lb_delete", actionDelete);
 
-        function actionDelete(event) {
+    function actionDelete(event) {
 
-            event.preventDefault();
-            let urlRequest = $(this).data("url");
-            let mythis = $(this);
-            Swal.fire({
-                title: 'Bạn có chắc chắn muốn xóa',
-                text: "Bạn sẽ không thể khôi phục điều này",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: "GET",
-                        url: urlRequest,
-                        success: function(data) {
-                            if (data.code == 200) {
+        event.preventDefault();
+        let urlRequest = $(this).data("url");
+        let mythis = $(this);
+        Swal.fire({
+            title: 'Bạn có chắc chắn muốn xóa',
+            text: "Bạn sẽ không thể khôi phục điều này",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "GET",
+                    url: urlRequest,
+                    success: function(data) {
+                        if (data.code == 200) {
 
-                                mythis.parents("tr").remove();
-                            }
-                        },
-                        error: function() {
-
+                            mythis.parents("tr").remove();
                         }
-                    });
-                    // Swal.fire(
-                    // 'Deleted!',
-                    // 'Your file has been deleted.',
-                    // 'success'
-                    // )
-                }
-            })
-        }
+                    },
+                    error: function() {
+
+                    }
+                });
+                // Swal.fire(
+                // 'Deleted!',
+                // 'Your file has been deleted.',
+                // 'success'
+                // )
+            }
+        })
+    }
 
     // js load change trạng thái hot và active
     $(document).on('click', '.lb-active', function() {
@@ -266,6 +266,7 @@ $(function() {
                 if (data.code == 200) {
                     let html = data.html;
                     wrapActive.html(html);
+                    location.reload();
                 }
             }
         });
@@ -481,9 +482,9 @@ $(function() {
     // end js chọn quyền
 
     // js load ajax đơn hàng
-    $(document).on("click", "#btn-load-transaction-detail", function() {
+    $(document).on("click", "#btn-load-calendar-detail", function() {
 
-        let contentWrap = $('#loadTransactionDetail');
+        let contentWrap = $('#loadCalendarDetail');
 
         let urlRequest = $(this).data("url");
         $.ajax({
@@ -491,13 +492,34 @@ $(function() {
             url: urlRequest,
             success: function(data) {
                 if (data.code == 200) {
-                    let html = data.htmlTransactionDetail;
+                    let html = data.htmlCalendar;
                     contentWrap.html(html);
-                    $('#transactionDetail').modal('show');
+                    $('#calendarDetail').modal('show');
                 }
             }
         });
     });
+    // end js load ajax đơn hàng
+
+    // js load ajax đơn hàng
+        $(document).on("click", "#btn-load-user-detail", function() {
+
+            let idUser = $(this).attr('data-id');
+            let contentWrap = $('#loadUserDetail' + idUser);
+
+            let urlRequest = $(this).data("url");
+            $.ajax({
+                type: "GET",
+                url: urlRequest,
+                success: function(data) {
+                    if (data.code == 200) {
+                        let html = data.htmlUserDetail;
+                        contentWrap.html(html);
+                        $('#userDetail'+ idUser).modal('show');
+                    }
+                }
+            });
+        });
     // end js load ajax đơn hàng
 
     // js load ajax chuyển trạng thái đơn hàng

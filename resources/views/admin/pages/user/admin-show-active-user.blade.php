@@ -92,35 +92,69 @@
                           <thead>
                               <tr>
                                   <th>STT</th>
+                                  <th>Mã nhân viên</th>
+                                  <th>Tên nhân viên</th>
                                   <th>Tài khoản</th>
-                                  <th>Tên user</th>
-                                  <th>Phone</th>
-                                  <th>Chức vụ</th>
-                                  <th class="white-space-nowrap">Active</th>
-                                  {{-- <th class="white-space-nowrap">Danh mục</th> --}}
-                                  <th>Action</th>
+                                  <th>Điện thoại</th>
+                                  <th>Địa chỉ</th>
+                                  <th>Phòng ban</th>
+                                  <th>Chức danh</th>
+                                  <th>Mức lương</th>
+                                  <th class="white-space-nowrap">Trạng thái</th>
+                                  <th>Hành động</th>
                               </tr>
                           </thead>
                           <tbody>
                               @foreach($data as $item)
                                   {{-- {{dd($item->category)}} --}}
-                              <tr>
-                                  <td>{{$loop->index}}</td>
-                                  <td>{{$item->email}}</td>
-                                  <td>{{$item->name}}</td>
-                                  <td>{{$item->phone}}</td>
-                                  <td>{{$item->role}}</td>
-                                  <td class="wrap-load-role" data-url="{{ route('admin.user.load.role',['id'=>$item->id]) }}">
+                                <tr>
+                                    <td>{{$loop->index}}</td>
+                                    <td>{{$item->user_code}}</td>
+                                    <td><a href="{{route('admin.user.detail',['id'=>$item->id])}}">{{$item->name}}</a></td>
+                                    <td>{{$item->email}}</td>
+                                    <td>{{$item->phone}}</td>
+                                    <td>{{ $item->address }} ,{{ $item->district->name }}, {{ $item->city->name }}</td>
+                                    <td>{{$item->room->name}}</td>
+                                    <td class="wrap-load-role" data-url="{{ route('admin.user.load.role',['id'=>$item->id]) }}">
                                         @include('admin.components.load-change-role',['data'=>$item,'type'=>'nhân viên'])
                                     </td>
+                                    <td>{{number_format($item->wage)}} VNĐ</td>
+
                                     <td class="wrap-load-active" data-url="{{ route('admin.user.load.active',['id'=>$item->id]) }}">
                                         @include('admin.components.load-change-active',['data'=>$item,'type'=>'nhân viên'])
                                     </td>
+
                                     <td>
-                                        <a href="{{route('admin.user.edit',['id'=>$item->id])}}" class="btn btn-sm btn-info"><i class="fas fa-edit"></i></a>
-                                        <a data-url="{{route('admin.user.delete',['id'=>$item->id])}}" class="btn btn-sm btn-danger lb_delete"><i class="far fa-trash-alt"></i></a>
+                                        <a  class="btn btn-sm btn-info" id="btn-load-user-detail" data-id="{{$item->id}}" data-url="{{route('admin.user.detail',['id'=>$item->id])}}" ><i class="fas fa-eye"></i></a>                                        <a data-url="{{route('admin.user.delete',['id'=>$item->id])}}" class="btn btn-sm btn-danger lb_delete"><i class="far fa-trash-alt"></i></a>
                                     </td>
-                              </tr>
+                                </tr>
+
+
+                                <!-- The Modal chi tiết nhân viên -->
+                                <div class="modal fade in" id="userDetail{{$item->id}}">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                        <h4 class="modal-title">Chi tiết nhân viên</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <div class="content" id="loadUserDetail{{$item->id}}">
+                                                
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
                               @endforeach
                           </tbody>
                       </table>

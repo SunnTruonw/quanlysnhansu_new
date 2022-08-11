@@ -17,9 +17,10 @@ class AdminMiddleware
     public function handle($request, Closure $next)
     {
         if (Auth::check()) {
-            return redirect()->intended('/admin');
+            return redirect()->route('admin.index');
             // return redirect(RouteServiceProvider::HOME);
         }
+
         return $next($request);
     }
 }

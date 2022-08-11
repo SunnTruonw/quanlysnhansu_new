@@ -8,13 +8,13 @@
       <div class="row">
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box">
-            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">CPU Traffic</span>
+              <span class="info-box-text">Tổng số nhân viên</span>
               <span class="info-box-number">
-                10
-                <small>%</small>
+                {{$totalUser}}
+                <small>/người</small>
               </span>
             </div>
             <!-- /.info-box-content -->
@@ -24,11 +24,11 @@
         <!-- /.col -->
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box mb-3">
-            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-cog"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Likes</span>
-              <span class="info-box-number">41,410</span>
+              <span class="info-box-text">Tổng số phòng ban</span>
+              <span class="info-box-number">{{$totalRoom}}/ phòng</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -44,8 +44,8 @@
             <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Sales</span>
-              <span class="info-box-number">760</span>
+              <span class="info-box-text">Đang cập nhật</span>
+              <span class="info-box-number">...</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -54,21 +54,58 @@
         <!-- /.col -->
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box mb-3">
-            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-thumbs-up"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">New Members</span>
-              <span class="info-box-number">2,000</span>
+              <span class="info-box-text">Đang cập nhật</span>
+              <span class="info-box-number">....</span>
             </div>
             <!-- /.info-box-content -->
           </div>
           <!-- /.info-box -->
         </div>
         <!-- /.col -->
+        <div class="col-md-6">
+          <div class="card card-outline card-primary">
+             <div class="card-header">
+                <h3 class="card-title">10 nhân viên nghỉ nhiều nhất tháng</h3>
+             </div>
+             <!-- /.card-header -->
+             <div class="card-body table-responsive p-0" style="height: 100vh ;">
+                   <ul class="list-news-home list-group">
+
+                       {{-- @foreach ($postNews as $item)
+                       <li class="list-group-item">
+                           <a href="{{route('admin.post.edit',['id'=>$item->id])}}"> <i class="fas fa-caret-right"></i> {{ $item->name }}</a>
+                       </li>
+                       @endforeach --}}
+
+                   </ul>
+             </div>
+             <!-- /.card-body -->
+          </div>
+       </div>
+       <div class="col-md-6">
+           <div class="card card-outline card-primary">
+               <div class="card-header">
+                   <h3 class="card-title">10 nhân viên nghỉ theo phòng ban</h3>
+               </div>
+               <div class="card-body table-responsive p-0" style="height: 100vh ;">
+                   <ul class="list-news-home list-group">
+                       {{-- @foreach ($productNews as $item)
+                       <li class="list-group-item">
+                           <a href="{{route('admin.product.edit',['id'=>$item->id])}}"> <i class="fas fa-caret-right"></i> {{ $item->name }}</a>
+                       </li>
+                       @endforeach --}}
+                   </ul>
+               </div>
+               <!-- /.card-body -->
+           </div>
+       </div>
       </div>
       <!-- /.row -->
 
-      <div class="row">
+      {{-- <div class="row">
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
@@ -832,7 +869,7 @@
         </div>
         <!-- /.col -->
       </div>
-      <!-- /.row -->
+      <!-- /.row --> --}}
     </div><!--/. container-fluid -->
   </section>
 @endsection

@@ -42,6 +42,26 @@
   .alert-danger-cus{
     color: red;
   }
+  .main-header .navbar-nav .nav-item{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+  button:disabled,
+  button[disabled]{
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+  }
+  .unselectable{
+      /* cursor: not-allowed; */
+      opacity: 0.65;
+    filter: alpha(opacity=65);
+    box-shadow: none;
+      pointer-events: none;
+      cursor: default;
+  }
 </style>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">

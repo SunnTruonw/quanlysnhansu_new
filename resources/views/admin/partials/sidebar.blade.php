@@ -88,7 +88,7 @@
               <li class="nav-item">
                 <a href="{{route('admin.active-user.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Quản lý admin</p>
+                  <p>Quản lý quyền</p>
                 </a>
               </li>
             </ul>

@@ -19,10 +19,9 @@ class CheckAdminLogin
     {
         $isAuthenticatedAdmin = (Auth::check());
 
-        //This will be excecuted if the new authentication fails.
         if (!$isAuthenticatedAdmin){
 
-            return redirect()->route('admin.login')->with('message', 'Authentication Error.');
+            return redirect()->route('admin.login')->with('message', 'Vui lòng đăng nhập hệ thống');
         }
         return $next($request);
 

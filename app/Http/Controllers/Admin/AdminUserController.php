@@ -43,15 +43,22 @@ class AdminUserController extends Controller
     }
     public function index(Request $request)
     {
+        $userM = $this->user->get();
+
+        // dd($userM);
+        User::factory()->count(2)->create();
+        $authCheck = \Auth::user();
+
         $params = $request->all();
 
         $address = new AddressHelper();
         $dataCity = $this->city->orderby('name')->get();
         $dataDistrict = $this->district->orderby('name')->get();
         $cities = $address->cities($dataCity);
+
+
         if(isset($params['district_id'])){
             $nameDistrict = $this->district->where('id', $params['district_id'])->first();
-
         }
         
         $data  = $this->user;
@@ -59,26 +66,39 @@ class AdminUserController extends Controller
             $data = $data->where(function ($query) use ($params) {
                 $query->where([
                     ['name', 'like', '%' . $params['keyword'] . '%']
+                ])->orWhere([
+                    ['user_code', 'like', '%' . $params['keyword'] . '%']
+                ])
+                ->orWhere([
+                    ['email', 'like', '%' . $params['keyword'] . '%']
+                ])
+                ->orWhere([
+                    ['phone', 'like', '%' . $params['keyword'] . '%']
+                ])
+                ->orWhere([
+                    ['address', 'like', '%' . $params['keyword'] . '%']
                 ]);
             });
         }
 
-        $dataDocuments = $this->documment
-        ->when($params, function ($query) use ($params) {
-            if (isset($params['start_date']) && isset($params['end_date'])) {
-                $query->whereBetween('date_working', [$params['start_date'], $params['end_date']]);
-            } else {
-                $query->when(isset($params['start_date']), function ($q) use ($params) {
-                    $q->where('date_working', '>=', $params['start_date']);
-                })
-                ->when(isset($params['end_date']), function ($q) use ($params) {
-                    $q->where('date_working', '<=', $params['end_date']);
-                });
-            }
-        });
+        if (isset($params['start_date']) && isset($params['end_date'])) {
+            $dataDocuments = $this->documment
+            ->when($params, function ($query) use ($params) {
+                if (isset($params['start_date']) && isset($params['end_date'])) {
+                    $query->whereBetween('date_working', [$params['start_date'], $params['end_date']]);
+                } else {
+                    $query->when(isset($params['start_date']), function ($q) use ($params) {
+                        $q->where('date_working', '>=', $params['start_date']);
+                    })
+                    ->when(isset($params['end_date']), function ($q) use ($params) {
+                        $q->where('date_working', '<=', $params['end_date']);
+                    });
+                }
+            });
 
-        $listIdUser = $dataDocuments->pluck('user_id');
-        $data = $data->whereIn('id', $listIdUser);
+            $listIdUser = $dataDocuments->pluck('user_id');
+            $data = $data->whereIn('id', $listIdUser);
+        }
 
         $data = $data->when(isset($params['city_id']), function ($query) use ($params) {
             $idProTranCity = $this->city->where([
@@ -101,6 +121,7 @@ class AdminUserController extends Controller
         $totalCategory = $this->user->get()->count();
         return view('admin.pages.user.index',[
             'data' => $data,
+            'authCheck' => $authCheck,
             'dataCity' => $dataCity,
             'totalCategory' => $totalCategory,
             'keyword' => $request->input('keyword') ?? '',
@@ -136,12 +157,17 @@ class AdminUserController extends Controller
         // dd($request->all());
         try {
              DB::beginTransaction();
+
+            $userCode = substr(md5(mt_rand()), 0, 6);
+
             $dataUserCreate = [
+                'user_code' => $userCode,
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
                 'password' => Hash::make($request->input('password')),
                 'address' => $request->input('address'),
+                'wage' => $request->input('wage'),
                 'sex' => $request->input('sex'),
                 'role' => $request->input('role'),
                 'room_id' => $request->input('room_id'),
@@ -210,6 +236,8 @@ class AdminUserController extends Controller
 
     public function edit(Request $request, $id)
     {
+        $authCheck = \Auth::user();
+
         $address = new AddressHelper();
 
         $dataCity = $this->city->orderby('name')->get();
@@ -223,12 +251,15 @@ class AdminUserController extends Controller
 
         return view('admin.pages.user.edit',[
             'data' => $data,
+            'authCheck' => $authCheck,
             'dataCity' => $dataCity,
             'cities' => $cities,
             'rooms' => $rooms,
             'categoriesM' => $categoriesM,
         ]);
     }
+
+    
 
     public function update(ValidateEditUser $request, $id)
     {
@@ -239,6 +270,7 @@ class AdminUserController extends Controller
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
                 'address' => $request->input('address'),
+                'wage' => $request->input('wage'),
                 'sex' => $request->input('sex'),
                 'room_id' => $request->input('room_id'),
                 'city_id' => $request->input('city_id'),
@@ -320,9 +352,64 @@ class AdminUserController extends Controller
         }
     }
 
+    public function loadCalendar($id)
+    {
+        $data = $this->user->find($id)->calendars()->get();
+        return response()->json([
+            'code' => 200,
+            'htmlCalendar' => view('admin.components.calendar-detail', [
+                'data' => $data,
+            ])->render(),
+            'messange' => 'success'
+        ], 200);
+    }
+
+    public function loadActiveCalendar($id)
+    {
+        $calendar   =  $this->calendar->find($id);
+        $active = $calendar->active;
+        if ($active) {
+            $activeUpdate = 0;
+        } else {
+            $activeUpdate = 1;
+        }
+        $updateResult =  $calendar->update([
+            'active' => $activeUpdate,
+        ]);
+
+        $calendar   =  $this->calendar->find($id);
+        if ($updateResult) {
+            return response()->json([
+                "code" => 200,
+                "html" => view('admin.components.load-change-calendar', ['data' => $calendar, 'type' => 'nhân viên'])->render(),
+                "message" => "success"
+            ], 200);
+        } else {
+            return response()->json([
+                "code" => 500,
+                "message" => "fail"
+            ], 500);
+        }
+    }
+
+
+    public function detail(Request $request, $id)
+    {
+        $data = $this->user->find($id);
+
+        return response()->json([
+            'code' => 200,
+            'htmlUserDetail' => view('admin.components.user-detail', [
+                'data' => $data,
+            ])->render(),
+            'messange' => 'success'
+        ], 200);
+    }
+
 
     public function loadActive($id)
     {
+        $authCheck = \Auth::user();
         $user   =  $this->user->find($id);
         $active = $user->active;
         if ($active) {
@@ -338,7 +425,7 @@ class AdminUserController extends Controller
         if ($updateResult) {
             return response()->json([
                 "code" => 200,
-                "html" => view('admin.components.load-change-active', ['data' => $user, 'type' => 'nhân viên'])->render(),
+                "html" => view('admin.components.load-change-active', ['data' => $user, 'type' => 'nhân viên', 'authCheck' => $authCheck])->render(),
                 "message" => "success"
             ], 200);
         } else {
@@ -351,6 +438,7 @@ class AdminUserController extends Controller
 
     public function delete($id)
     {
-        return $this->deleteTrait($this->room, $id);
+        // dd($id);
+        return $this->deleteTrait($this->user, $id);
     }
 }
