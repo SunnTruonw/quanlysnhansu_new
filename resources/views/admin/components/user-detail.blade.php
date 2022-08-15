@@ -3,7 +3,9 @@
         <div class="row">
             <div class="col-lg-4">
                 <div class="card mb-4">
-                    <div class="card-body text-center">
+                    <div class="card-body text-center" style="display: flex;
+                    align-items: center;justify-content: center;
+                    flex-direction: column;">
                         <img src="{{$data->avatar_path?asset($data->avatar_path): $shareFrontend['noImage']}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;" />
                         <h5 class="my-3">{{$data->name}}</h5>
                         {!!$data->description!!}
@@ -23,7 +25,7 @@
                         </div>
                         <hr />
                         <div class="row">
-                            
+
                             <div class="col-sm-3">
                                 <p class="mb-0">Họ và tên</p>
                             </div>

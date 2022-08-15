@@ -23,34 +23,37 @@ $(function() {
             });
         }
     })
-    
+
+    function displayImage(input, selectorWrap, selectorImg) {
+        input.parents(selectorWrap).find(selectorImg).remove();
+
+        let file = input.prop('files')[0];
+        let reader = new FileReader();
+
+        reader.addEventListener("load", function() {
+            // convert image file to base64 string
+            let img = $('<img class="img-load" />');
+            img.attr({
+                'src': reader.result,
+                'alt': file.name,
+            });
+            input.parents(selectorWrap).append(img);
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
 
     // js load ảnh khi upload
     $(document).on('change', '.img-load-input', function() {
         let input = $(this);
         displayImage(input, '.wrap-load-image', '.img-load');
     });
-    
-    function displayImage(input, selectorWrap, selectorImg) {
-    input.parents(selectorWrap).find(selectorImg).remove();
 
-    let file = input.prop('files')[0];
-    let reader = new FileReader();
 
-    reader.addEventListener("load", function() {
-        // convert image file to base64 string
-        let img = $('<img />');
-        img.attr({
-            'src': reader.result,
-            'alt': file.name,
-        });
-        input.parents(selectorWrap).append(img);
-    }, false);
 
-    if (file) {
-        reader.readAsDataURL(file);
-    }
-}
     // js load nhiều ảnh khi upload
     $(document).on('change', '.img-load-input-multiple', function() {
         let input = $(this);
@@ -93,7 +96,7 @@ $(function() {
             slug = slug.replace(/\@\-|\-\@|\@/gi, '');
             return slug;
         }
-    
+
 
     // js  show childs category đệ quy
     $(document).on('click', '.lb-toggle', function() {
@@ -102,16 +105,16 @@ $(function() {
     });
     // end js  show childs category đệ quy
 
-    // js create select tag
-    // $(".tag-select-choose").select2({
-    //     tags: true,
-    //     tokenSeparators: [','],
-    // });
-    // $(".select-2-init").select2({
-    //     placeholder: "--- Chọn danh mục ---",
-    //     allowClear: true,
-    // });
-    // end create select tag
+    //js create select tag
+    $(".tag-select-choose").select2({
+        tags: true,
+        tokenSeparators: [','],
+    });
+    $(".select-2-init").select2({
+        placeholder: "--- Chọn danh mục ---",
+        allowClear: true,
+    });
+    //end create select tag
 
     // js tinymce
     let editor_config = {
@@ -232,7 +235,7 @@ $(function() {
     }
 
     // js load change trạng thái hot và active
-    $(document).on('click', '.lb-active', function() {
+    $(document).on('click', '.lb-active', function(event) {
         event.preventDefault();
         let wrapActive = $(this).parents('.wrap-load-active');
         let urlRequest = wrapActive.data("url");
@@ -254,7 +257,7 @@ $(function() {
     });
 
     // js load change trạng thái hot và role
-    $(document).on('click', '.lb-role', function() {
+    $(document).on('click', '.lb-role', function(event) {
         event.preventDefault();
         let wrapActive = $(this).parents('.wrap-load-role');
         let urlRequest = wrapActive.data("url");
@@ -271,6 +274,33 @@ $(function() {
             }
         });
     });
+
+    // js load change trạng thái hot và role
+    // $(document).on('click', '.lb-role-ckeck', function(event) {
+    //     event.preventDefault();
+    //     let wrapActive = $(this).parents('.wrap-load-role');
+    //     let urlRequest = wrapActive.data("url");
+
+
+    //     $.ajax({
+    //         type: "GET",
+    //         url: urlRequest,
+    //         success: function(data) {
+    //             if (data.code == 200) {
+    //                 Swal.fire({
+    //                     title: 'Vui lòng đợi Admin duyệt',
+    //                     icon: 'warning',
+    //                     showCancelButton: true,
+    //                     confirmButtonColor: '#3085d6',
+    //                     cancelButtonColor: '#d33',
+    //                     confirmButtonText: 'Yes, next step!'
+    //                 })
+    //             }
+    //         }
+    //     });
+    // });
+
+
 
     $(document).on('click', '.lb-default', function() {
         event.preventDefault();

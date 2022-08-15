@@ -18,6 +18,7 @@ use App\Models\Documment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AdminLoginController extends Controller
 {
@@ -75,19 +76,18 @@ class AdminLoginController extends Controller
 
     public function showActiveUserForm(Request $request)
     {
-        $authCheck = \Auth::user();
-        $params = $request->all();
+        $authCheck = Auth::user();
 
+        $params = $request->all();
+        $where = [];
         $address = new AddressHelper();
         $dataCity = $this->city->orderby('name')->get();
-        $dataDistrict = $this->district->orderby('name')->get();
-        $cities = $address->cities($dataCity);
+
         if(isset($params['district_id'])){
             $nameDistrict = $this->district->where('id', $params['district_id'])->first();
-
         }
-        
-        $data  = $this->user;
+
+        $data  = $this->user->where('status', 2);
         if (isset($params['keyword']) && $params['keyword']) {
             $data = $data->where(function ($query) use ($params) {
                 $query->where([
@@ -107,22 +107,24 @@ class AdminLoginController extends Controller
             });
         }
 
-        $dataDocuments = $this->documment
-        ->when($params, function ($query) use ($params) {
-            if (isset($params['start_date']) && isset($params['end_date'])) {
-                $query->whereBetween('date_working', [$params['start_date'], $params['end_date']]);
-            } else {
-                $query->when(isset($params['start_date']), function ($q) use ($params) {
-                    $q->where('date_working', '>=', $params['start_date']);
-                })
-                ->when(isset($params['end_date']), function ($q) use ($params) {
-                    $q->where('date_working', '<=', $params['end_date']);
-                });
-            }
-        });
+        if (isset($params['start_date']) && isset($params['end_date'])) {
+            $dataDocuments = $this->documment
+            ->when($params, function ($query) use ($params) {
+                if (isset($params['start_date']) && isset($params['end_date'])) {
+                    $query->whereBetween('date_working', [$params['start_date'], $params['end_date']]);
+                } else {
+                    $query->when(isset($params['start_date']), function ($q) use ($params) {
+                        $q->where('date_working', '>=', $params['start_date']);
+                    })
+                    ->when(isset($params['end_date']), function ($q) use ($params) {
+                        $q->where('date_working', '<=', $params['end_date']);
+                    });
+                }
+            });
 
-        $listIdUser = $dataDocuments->pluck('user_id');
-        $data = $data->whereIn('id', $listIdUser);
+            $listIdUser = $dataDocuments->pluck('user_id');
+            $data = $data->whereIn('id', $listIdUser);
+        }
 
         $data = $data->when(isset($params['city_id']), function ($query) use ($params) {
             $idProTranCity = $this->city->where([
@@ -139,28 +141,51 @@ class AdminLoginController extends Controller
                 $query->whereIn('district_id', $idProTranDistrict);
         });
 
-        
+        if ($request->has('fill_action') && $request->input('fill_action')) {
+            $key = $request->input('fill_action');
+
+            switch ($key) {
+                case 'active':
+                    $where[] = ['active', '=', 1];
+                    break;
+                case 'no_active':
+                    $where[] = ['active', '=', 0];
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if ($where) {
+            $data = $data->where($where);
+        }
+
         $data = $data->orderBy('created_at','desc')->latest()->paginate(15);
 
-        $totalCategory = $this->user->get()->count();
+        $totalUser = $this->user->count();
+
 
         return view('admin.pages.user.admin-show-active-user',[
             'data' => $data,
             'authCheck' => $authCheck,
             'dataCity' => $dataCity,
-            'totalCategory' => $totalCategory,
-            'keyword' => $request->input('keyword') ?? '',
+            'totalCategory' => $totalUser,
             'keyword' => $request->input('keyword') ?? '',
             'start_date' => $request->input('start_date') ?? '',
             'end_date' => $request->input('end_date') ?? '',
             'city_id' => $request->input('city_id') ?? '',
             'nameDistrict' => $nameDistrict->name ?? '',
+            'fill_action' => $request->input('fill_action') ? $request->input('fill_action') : "",
+
         ]);
     }
 
+
+
     public function loadActiveUser($id)
     {
-        $authCheck = \Auth::user();
+        $authCheck = Auth::user();
+
         $user   =  $this->user->find($id);
         $role = $user->role;
         if ($role=='user') {
@@ -169,11 +194,18 @@ class AdminLoginController extends Controller
             $roleUpdate = 'user';
         }
 
-        $updateResult =  $user->update([
-            'role' => $roleUpdate,
-        ]);
+        if(Auth::user()->role == 'admin'){
+            $updateResult =  $user->update([
+                'role' => $roleUpdate,
+            ]);//admin update
+        }else{
+            $updateResult =  $user->update([
+                // 'role' => $roleUpdate,
+                'status' => 2
+            ]);//admin update//user update account của chính mình
+        }
 
-        $user   =  $this->user->find($id);
+        $user  =  $this->user->find($id);
         if ($updateResult) {
             return response()->json([
                 "code" => 200,
@@ -192,16 +224,25 @@ class AdminLoginController extends Controller
     {
         // dd($request->all());
         try {
+
             DB::beginTransaction();
 
-            $newPass = $request->input('new-password');
+            $validator = Validator::make($request->all(), [
+                'old_password' => 'required',
+                'new_password' => 'min:8|required',
+                'confirm_password' => 'required|same:new_password',
+            ]);
 
+            if (!(Hash::check($request->old_password, Auth::user()->password))) {
+                // return response()->json(['html' => 'Mật khẩu của bạn không khớp với mật khẩu hiện tại.']);
+                return redirect()->back()->with("error", "Mật khẩu của bạn không khớp với mật khẩu hiện tại.");
+            }
 
-            $this->user->where('id', $id)->update(['password' => \Hash::make($newPass)]);
+            $newPass = $request->input('new_password');
+            $this->user->where('id', $id)->update(['password' => Hash::make($newPass)]);
 
-            $user   =  $this->user->find($id);
+            $this->user->find($id);
 
-            // dd($user);
             DB::commit();
             return redirect()->back()->with("alert", "Sửa mật khẩu thành công");
         } catch (\Exception $exception) {
@@ -212,6 +253,6 @@ class AdminLoginController extends Controller
             Log::error('message' . $exception->getMessage() . 'line :' . $exception->getLine());
             return redirect()->back()->with("error", "Sửa mật khẩu không thành công");
         }
-       
+
     }
 }

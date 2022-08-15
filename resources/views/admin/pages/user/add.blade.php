@@ -96,7 +96,7 @@
                                                         @enderror
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="form-group row">
                                                     <label for="" class="col-sm-2">Quận/huyện <strong>*</strong></label>
                                                     <div class="col-sm-10">
@@ -224,14 +224,18 @@
 
                                     <div class="form-group">
                                         <label class="control-label" for="">Chọn phòng ban</label>
-                                        <select class="form-control" name="room_id">
+                                        <select class="form-control custom-select select-2-init" name="room_id">
                                             <option value="">--Chọn phòng ban--</option>
                                             @if(isset($rooms) && $rooms)
                                                 @foreach ($rooms as $room)
                                                     <option @if (old('room_id')) {{ old('room_id')?'selected':"" }} @endif value="{{$room->id}}">{{$room->name}}</option>
                                                 @endforeach
                                             @endif
+                                                {!!$option!!}
                                         </select>
+                                        @error('room_id')
+                                            <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
+                                        @enderror
                                     </div>
 
 
@@ -286,7 +290,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label class="control-label" for="">Trạng thái</label>
                                         <div class="form-check-inline">
@@ -307,7 +311,7 @@
                                     <hr>
                                  </div>
 
-                                 
+
                             </div>
 
                             <div class="card card-outline card-primary">
@@ -367,7 +371,7 @@
                                                 <option value="admin">Admin</option>
                                             </select>
                                         </div>
-                                      
+
                                     </div>
 
                                  </div>

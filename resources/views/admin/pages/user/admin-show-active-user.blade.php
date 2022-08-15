@@ -68,6 +68,14 @@
                                                     @endif
                                                 </select>
                                             </div>
+
+                                            <div class="form-group col-md-2 mb-0" style="min-width:100px;">
+                                                <select name="fill_action" class="form-control">
+                                                    <option value="">-- Trạng thái --</option>
+                                                    <option value="active" {{ $fill_action == 'active'? 'selected':'' }}>Đang làm</option>
+                                                    <option value="no_active" {{ $fill_action =='no_active'? 'selected':'' }}>Nghỉ việc</option>
+                                                </select>
+                                            </div>
                                       </div>
                                   </div>
 
@@ -116,7 +124,8 @@
                                     <td>{{ $item->address }} ,{{ $item->district->name }}, {{ $item->city->name }}</td>
                                     <td>{{$item->room->name}}</td>
                                     <td class="wrap-load-role" data-url="{{ route('admin.user.load.role',['id'=>$item->id]) }}">
-                                        @include('admin.components.load-change-role',['data'=>$item,'type'=>'nhân viên'])
+                                        {{-- @include('admin.components.load-change-role',['data'=>$item,'type'=>'nhân viên']) --}}
+                                        <a class="btn btn-sm {{$item->role == 'admin' ? 'btn-success':'btn-warning'}} @if($authCheck->role == 'admin') lb-role @endif" data-value="{{$item->role}}"  >{{$item->role== 'admin' ?'Admin':'User'}}</a>
                                     </td>
                                     <td>{{number_format($item->wage)}} VNĐ</td>
 
@@ -144,7 +153,7 @@
                                         <!-- Modal body -->
                                         <div class="modal-body">
                                             <div class="content" id="loadUserDetail{{$item->id}}">
-                                                
+
                                             </div>
                                         </div>
 
@@ -167,7 +176,7 @@
       </div>
     </div>
   </div>
-  
+
 
 
 @endsection

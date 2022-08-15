@@ -21,6 +21,11 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('admin_asset/dist/css/adminlte.min.css')}}">
   <!-- overlayScrollbars -->
+  <!-- Select2 -->
+  <link href="{{asset('admin_asset/asset/select2/css/select2.min.css')}}" rel="stylesheet" />
+
+
+
   <link rel="stylesheet" href="{{asset('admin_asset/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
   <!-- Daterange picker -->
   <link rel="stylesheet" href="{{asset('admin_asset/plugins/daterangepicker/daterangepicker.css')}}">
@@ -28,7 +33,7 @@
   <link rel="stylesheet" href="{{asset('admin_asset/plugins/summernote/summernote-bs4.min.css')}}">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
-
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <style>
@@ -54,6 +59,10 @@
     background-color: #cccccc;
     color: #666666;
   }
+  .btn-primary{
+    color: #000 !important;
+
+  }
   .unselectable{
       /* cursor: not-allowed; */
       opacity: 0.65;
@@ -62,6 +71,24 @@
       pointer-events: none;
       cursor: default;
   }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: #000 !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: auto;
+    }
+    .tinymce_editor_init{
+        height: 300px !important;
+    }
+	.card-body .form-group {
+		margin-bottom: 5px;
+	}
+
+    ul.lb_list_category{
+        font-size: 16px;
+    }
 </style>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -76,7 +103,7 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  
+
   @include('admin.partials.sidebar');
 
   <!-- Content Wrapper. Contains page content -->
@@ -87,7 +114,7 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  
+
   @include('admin.partials.footer');
 
   <!-- Control Sidebar -->
@@ -130,6 +157,10 @@
 {{-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script> --}}
 <!-- -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
+<!-- Select2 -->
+<script src="{{asset('admin_asset/asset/select2/js/select2.min.js')}}"></script>
+
 <!-- MainJS -->
 <script src="{{asset('admin_asset/asset/js/main.js')}}"></script>
 
@@ -141,6 +172,15 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('admin_asset/dist/js/pages/dashboard.js')}}"></script>
 
+
+{{-- <link href="css/plugins/morris.css" rel="stylesheet">
+<!-- jQuery -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.0/morris.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script> --}}
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @yield('js')
 </body>
 </html>

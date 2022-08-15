@@ -25,7 +25,7 @@ class ValidateEditCategory extends FormRequest
     {
         return [
             'name' => 'required|max:255',
-            "slug" => "nullable|unique:App\Models\Category,slug",
+            "slug" => "nullable",
             "order" => "nullable|numeric",
             "avatar_path" => "mimes:jpeg,jpg,png,svg,webp|nullable|file|max:3000",
             "active" => "required",
@@ -39,7 +39,6 @@ class ValidateEditCategory extends FormRequest
             'name.max' => 'Tên danh mục không vượt quá 255 ký tự',
             'slug.required' => 'Đường dẫn danh mục không được bổ trống',
             'slug.max' => 'Đường dẫn danh mục không vượt quá 255 ký tự',
-            'slug.unique' => 'Đường dẫn đã tồn tại',
             "avatar.mimes" => "Ảnh danh mục có đuôi jpeg,jpg,png,svg,webp",
             "avatar_path.max" => "Ảnh vượt quá size < 3mb",
             "active.required" => "active category is required",

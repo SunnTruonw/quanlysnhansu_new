@@ -17,6 +17,7 @@ use App\Helper\AddressHelper;
 use App\Traits\DeleteRecordTrait;
 use App\Traits\StorageImageTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -43,25 +44,19 @@ class AdminUserController extends Controller
     }
     public function index(Request $request)
     {
-        $userM = $this->user->get();
-
-        // dd($userM);
-        User::factory()->count(2)->create();
-        $authCheck = \Auth::user();
+        $authCheck = Auth::user();
 
         $params = $request->all();
-
+        $where = [];
         $address = new AddressHelper();
         $dataCity = $this->city->orderby('name')->get();
-        $dataDistrict = $this->district->orderby('name')->get();
-        $cities = $address->cities($dataCity);
-
 
         if(isset($params['district_id'])){
             $nameDistrict = $this->district->where('id', $params['district_id'])->first();
         }
-        
+
         $data  = $this->user;
+
         if (isset($params['keyword']) && $params['keyword']) {
             $data = $data->where(function ($query) use ($params) {
                 $query->where([
@@ -108,39 +103,62 @@ class AdminUserController extends Controller
             $query->whereIn('city_id', $idProTranCity);
         })
         ->when(isset($params['district_id']), function ($query) use ($params) {
-            // dd($params['district_id']);
             $idProTranDistrict = $this->district->where([
                 ['id', $params['district_id']]
             ])->pluck('id');
 
                 $query->whereIn('district_id', $idProTranDistrict);
         });
-        
+
+        if ($request->has('fill_action') && $request->input('fill_action')) {
+            $key = $request->input('fill_action');
+
+            switch ($key) {
+                case 'active':
+                    $where[] = ['active', '=', 1];
+                    break;
+                case 'no_active':
+                    $where[] = ['active', '=', 0];
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if ($where) {
+            $data = $data->where($where);
+        }
+
         $data = $data->orderBy('created_at','desc')->latest()->paginate(15);
 
-        $totalCategory = $this->user->get()->count();
+        $totalUser = $this->user->count();
+
         return view('admin.pages.user.index',[
             'data' => $data,
             'authCheck' => $authCheck,
             'dataCity' => $dataCity,
-            'totalCategory' => $totalCategory,
+            'total' => $totalUser,
             'keyword' => $request->input('keyword') ?? '',
             'start_date' => $request->input('start_date') ?? '',
             'end_date' => $request->input('end_date') ?? '',
             'city_id' => $request->input('city_id') ?? '',
             'nameDistrict' => $nameDistrict->name ?? '',
+            'fill_action' => $request->input('fill_action') ? $request->input('fill_action') : "",
         ]);
     }
 
+
     public function add(Request $request)
     {
+        $htmlselect = $this->category->getHtmlOption();
+
         $address = new AddressHelper();
 
         $data = $this->city->orderby('name')->get();
         $cities = $address->cities($data);
-        $rooms = $this->room->get();
+        $rooms = Room::limit(100)->get();
 
-        $categoriesM = $this->category->where([
+        $categoriesM = Category::where([
             ['active', 1],
             ['parent_id', 0],
         ])->latest()->get();
@@ -149,12 +167,12 @@ class AdminUserController extends Controller
             'categoriesM' => $categoriesM,
             'cities' => $cities,
             'rooms' => $rooms,
+            'option' => $htmlselect,
         ]);
     }
 
     public function store(ValidateAddUser $request)
     {
-        // dd($request->all());
         try {
              DB::beginTransaction();
 
@@ -224,7 +242,7 @@ class AdminUserController extends Controller
 
             DB::commit();
             return redirect()->route('admin.user.index')->with("alert", "Thêm danh mục thành công");
-            
+
         } catch (\Exception $exception) {
             //throw $th;
             DB::rollBack();
@@ -236,17 +254,17 @@ class AdminUserController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $authCheck = \Auth::user();
+        $authCheck = Auth::user();
 
         $address = new AddressHelper();
 
         $dataCity = $this->city->orderby('name')->get();
         $cities = $address->cities($dataCity);
-        
+
         $data = $this->user->find($id);
 
         $categoriesM = $this->category->where('parent_id', 0)->get();
-        $rooms = $this->room->get();
+        $rooms = $this->room->limit(100)->get();
 
 
         return view('admin.pages.user.edit',[
@@ -259,7 +277,7 @@ class AdminUserController extends Controller
         ]);
     }
 
-    
+
 
     public function update(ValidateEditUser $request, $id)
     {
@@ -278,71 +296,76 @@ class AdminUserController extends Controller
                 'active' => $request->input('active'),
             ];
 
-            $dataUploadAvatar = $this->storageTraitUpload($request, "avatar_path", "user");
-            if (!empty($dataUploadAvatar)) {
-                $path = $this->user->find($id)->avatar_path;
-                if ($path) {
-                    Storage::delete($this->makePathDelete($path));
-                }
-                $dataCategoryUpdate["avatar_path"] = $dataUploadAvatar["file_path"];
+            if(Auth::user()->role == 'admin'){
+                $dataCategoryUpdate["status"] = 1;//admin update
+            }else{
+                $dataCategoryUpdate["status"] = 2;//user update account của chính mình
             }
-
-            // dd($dataCategoryUpdate);
-
-            $this->user->find($id)->update($dataCategoryUpdate);
-
-            //insert data documment
-            $user = $this->user->find($id);
-
-            $dataUserDocmentUpdate = [
-                'description' => $request->input('description'),
-                'content' => $request->input('content'),
-                'date_working' => $request->input('date_working'),
-                'date_off' => $request->input('date_off'),
-                'active' => $request->input('active'),
-                'order' => $request->input('order') ?? 0,
-            ];
-
-            $dataUploadImage = $this->storageTraitUpload($request, "image_path", "user");
-            if (!empty($dataUploadImage)) {
-                $path = $this->user->find($id)->image_path;
-                if ($path) {
-                    Storage::delete($this->makePathDelete($path));
-                }
-                $dataUserDocmentUpdate["image_path"] = $dataUploadImage["file_path"];
-            }
-
-            $dataUploadFile = $this->storageTraitUpload($request, "file", "user");
-            if (!empty($dataUploadFile)) {
-                $path = $this->user->find($id)->file;
-                if ($path) {
-                    Storage::delete($this->makePathDelete($path));
-                }
-                $dataUserDocmentUpdate["file"] = $dataUploadFile["file_path"];
-            }
-
-            if ($user->docmments()) {
-                $user->docmments()->update($dataUserDocmentUpdate);
-            } else {
-                $user->docmments()->create($dataUserDocmentUpdate);
-            }
-
-            // insert category to user
-            if ($request->has("category")) {
-                $category_ids = [];
-                foreach ($request->input('category') as $categoryItem) {
-                    if ($categoryItem) {
-                        $categoryInstance = $this->category->find($categoryItem);
-                        $category_ids[] = $categoryInstance->id;
+                $dataUploadAvatar = $this->storageTraitUpload($request, "avatar_path", "user");
+                if (!empty($dataUploadAvatar)) {
+                    $path = $this->user->find($id)->avatar_path;
+                    if ($path) {
+                        Storage::delete($this->makePathDelete($path));
                     }
+                    $dataCategoryUpdate["avatar_path"] = $dataUploadAvatar["file_path"];
                 }
 
-                $user->categories()->sync($category_ids);
-            }
+                // dd($dataCategoryUpdate);
+
+                $this->user->find($id)->update($dataCategoryUpdate);
+
+                //insert data documment
+                $user = $this->user->find($id);
+
+                $dataUserDocmentUpdate = [
+                    'description' => $request->input('description'),
+                    'content' => $request->input('content'),
+                    'date_working' => $request->input('date_working'),
+                    'date_off' => $request->input('date_off'),
+                    'active' => $request->input('active'),
+                    'order' => $request->input('order') ?? 0,
+                ];
+
+                $dataUploadImage = $this->storageTraitUpload($request, "image_path", "user");
+                if (!empty($dataUploadImage)) {
+                    $path = $this->user->find($id)->image_path;
+                    if ($path) {
+                        Storage::delete($this->makePathDelete($path));
+                    }
+                    $dataUserDocmentUpdate["image_path"] = $dataUploadImage["file_path"];
+                }
+
+                $dataUploadFile = $this->storageTraitUpload($request, "file", "user");
+                if (!empty($dataUploadFile)) {
+                    $path = $this->user->find($id)->file;
+                    if ($path) {
+                        Storage::delete($this->makePathDelete($path));
+                    }
+                    $dataUserDocmentUpdate["file"] = $dataUploadFile["file_path"];
+                }
+
+                if ($user->docmments()) {
+                    $user->docmments()->update($dataUserDocmentUpdate);
+                } else {
+                    $user->docmments()->create($dataUserDocmentUpdate);
+                }
+
+                // insert category to user
+                if ($request->has("category")) {
+                    $category_ids = [];
+                    foreach ($request->input('category') as $categoryItem) {
+                        if ($categoryItem) {
+                            $categoryInstance = $this->category->find($categoryItem);
+                            $category_ids[] = $categoryInstance->id;
+                        }
+                    }
+
+                    $user->categories()->sync($category_ids);
+                }
 
 
-            DB::commit();
-            return redirect()->route('admin.user.index')->with("alert", "Sửa danh mục thành công");
+                DB::commit();
+                return redirect()->route('admin.user.index')->with("alert", "Sửa danh mục thành công");
         } catch (\Exception $exception) {
             //throw $th;
             DB::rollBack();
@@ -409,7 +432,7 @@ class AdminUserController extends Controller
 
     public function loadActive($id)
     {
-        $authCheck = \Auth::user();
+        $authCheck = Auth::user();
         $user   =  $this->user->find($id);
         $active = $user->active;
         if ($active) {

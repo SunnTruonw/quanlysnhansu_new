@@ -14,7 +14,7 @@
 	}
 	.navbar-brand {
 		font-size: 25px;
-		font-weight:700; 
+		font-weight:700;
 	}
 	.container {
 	}
@@ -69,6 +69,8 @@
                         @endforeach
                     </ul>
                 @endif
+
+
 
                 @if (session('status'))
                     <ul>

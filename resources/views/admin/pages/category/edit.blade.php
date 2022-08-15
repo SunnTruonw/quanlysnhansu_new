@@ -147,7 +147,7 @@
                                  <div class="card-body table-responsive p-3">
 
                                     <div class="form-group">
-                                        <select class="form-control @error('parent_id')
+                                        <select class="form-control custom-select select-2-init @error('parent_id')
                                         is-invalid
                                         @enderror" name="parent_id">
                                             <option value="0">--- Chọn danh mục cha ---</option>

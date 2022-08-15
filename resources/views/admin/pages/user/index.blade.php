@@ -70,6 +70,14 @@
                                                     @endif
                                                 </select>
                                             </div>
+
+                                            <div class="form-group col-md-2 mb-0" style="min-width:100px;">
+                                                <select name="fill_action" class="form-control">
+                                                    <option value="">-- Trạng thái --</option>
+                                                    <option value="active" {{ $fill_action == 'active'? 'selected':'' }}>Đang làm</option>
+                                                    <option value="no_active" {{ $fill_action =='no_active'? 'selected':'' }}>Nghỉ việc</option>
+                                                </select>
+                                            </div>
                                       </div>
                                   </div>
 
@@ -86,7 +94,7 @@
                   <div class="card-tools text-right pl-3 pr-3 pt-2 pb-2">
                       <div class="count">
                           Tổng số bản ghi
-                           <strong>{{  $data->count() }}</strong> / {{ $totalCategory }}
+                           <strong>{{  $data->count() }}</strong> / {{ $total }}
                        </div>
                     </div>
                   <div class="card-body table-responsive p-0 lb-list-category">
@@ -112,20 +120,26 @@
                                   <tr>
                                     <td>{{$loop->index}}</td>
                                     <td>{{$item->user_code}}</td>
-                                    <td><a href="{{route('admin.user.detail',['id'=>$item->id])}}">{{$item->name}}</a></td>
+                                    <td>{{$item->name}}</td>
                                     <td>{{$item->email}}</td>
                                     <td>{{$item->phone}}</td>
-                                    <td>{{ $item->address }} ,{{ $item->district->name }}, {{ $item->city->name }}</td>
+
+                                    <td>
+                                        @if (isset($item->district) && isset($item->city)){{ $item->address }} ,{{ $item->district->name }}, {{ $item->city->name }} @else
+                                            {{ $item->address }}
+                                        @endif
+                                    </td>
+
                                     <td>{{$item->room->name}}</td>
                                     <td  class="wrap-load-role @if($authCheck->id == $item->id || $authCheck->role == 'admin')  @else unselectable  @endif" data-url="{{ route('admin.user.load.role',['id'=>$item->id]) }}">
                                         @include('admin.components.load-change-role',['data'=>$item,'type'=>'nhân viên'])
                                     </td>
                                     <td>{{number_format($item->wage)}} VNĐ</td>
-                                    
+
                                     <td class="wrap-load-active @if($authCheck->id == $item->id || $authCheck->role == 'admin')  @else unselectable  @endif" data-url="{{ route('admin.user.load.active',['id'=>$item->id]) }}">
                                         @include('admin.components.load-change-active',['data'=>$item,'type'=>'nhân viên'])
                                     </td>
-                                    
+
                                     <td>
 
                                         <a href="{{route('admin.user.edit',['id'=>$item->id])}}" class="btn btn-sm btn-info"><i class="fas fa-edit"></i></a>
@@ -149,7 +163,7 @@
                                         <!-- Modal body -->
                                         <div class="modal-body">
                                             <div class="content" id="loadUserDetail{{$item->id}}">
-                                                
+
                                             </div>
                                         </div>
 
@@ -173,9 +187,35 @@
     </div>
   </div>
 
-  
+
 
 @endsection
 @section('js')
+<script>
+    $(document).on('click', '.lb-role-ckeck', function() {
+        event.preventDefault();
+        let wrapActive = $(this).parents('.wrap-load-role');
+        let urlRequest = wrapActive.data("url");
 
+        console.log(urlRequest);
+        Swal.fire({
+            title: 'Vui lòng đợi Admin duyệt!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, next step!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "GET",
+                    url: urlRequest,
+                    success: function(data) {
+                        console.log(data);
+                    }
+                });
+            }
+        })
+    });
+</script>
 @endsection

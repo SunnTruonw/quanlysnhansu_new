@@ -19,7 +19,7 @@ class CreateRoomsTable extends Migration
             $table->text('description')->nullable();
             $table->string('avatar_path')->nullable();
             $table->tinyInteger('active')->default(1);
-            $table->tinyInteger('order')->default(0);
+            $table->tinyInteger('order')->default(0)->nullable();
             $table->timestamps();
         });
     }

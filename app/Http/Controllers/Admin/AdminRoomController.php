@@ -9,6 +9,7 @@ use App\Models\Room;
 use App\Traits\DeleteRecordTrait;
 use App\Traits\StorageImageTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -26,6 +27,8 @@ class AdminRoomController extends Controller
 
     public function index(Request $request)
     {
+        $authCheck = Auth::user();
+
         $data  = $this->room;
         if ($request->input('keyword')) {
             $data = $data->where(function ($query) {
@@ -37,9 +40,10 @@ class AdminRoomController extends Controller
 
         $data = $data->where('active', 1)->orderBy('created_at','desc')->latest()->paginate(15);
 
-        $totalCategory = $this->room->where('active', 1)->get()->count();
+        $totalCategory = $this->room->where('active', 1)->count();
         return view('admin.pages.room.index',[
             'data' => $data,
+            'authCheck' => $authCheck,
             'totalCategory' => $totalCategory,
             'keyword' => $request->input('keyword') ?? '',
         ]);
@@ -71,7 +75,7 @@ class AdminRoomController extends Controller
 
             DB::commit();
             return redirect()->route('admin.room.index')->with("alert", "Thêm phòng ban thành công");
-            
+
         } catch (\Exception $exception) {
             //throw $th;
             DB::rollBack();
@@ -83,10 +87,13 @@ class AdminRoomController extends Controller
 
     public function edit(Request $request, $id)
     {
+        $authCheck = Auth::user();
+
         $data = $this->room->find($id);
 
         return view('admin.pages.room.edit',[
             'data' => $data,
+            'authCheck' => $authCheck,
         ]);
     }
 
@@ -106,6 +113,7 @@ class AdminRoomController extends Controller
                 if ($path) {
                     Storage::delete($this->makePathDelete($path));
                 }
+
                 $dataRoomUpdate["avatar_path"] = $dataUploadAvatar["file_path"];
             }
 
@@ -121,6 +129,35 @@ class AdminRoomController extends Controller
             dd($exception);
             Log::error('message' . $exception->getMessage() . 'line :' . $exception->getLine());
             return redirect()->route('admin.room.index')->with("error", "Sửa phòng ban không thành công");
+        }
+    }
+
+    public function loadActive($id)
+    {
+        $authCheck = Auth::user();
+        $room   =  $this->room->find($id);
+        $active = $room->active;
+        if ($active) {
+            $activeUpdate = 0;
+        } else {
+            $activeUpdate = 1;
+        }
+        $updateResult =  $room->update([
+            'active' => $activeUpdate,
+        ]);
+
+        $room   =  $this->room->find($id);
+        if ($updateResult) {
+            return response()->json([
+                "code" => 200,
+                "html" => view('admin.components.load-change-active', ['data' => $room, 'type' => 'phòng ban', 'authCheck' => $authCheck])->render(),
+                "message" => "success"
+            ], 200);
+        } else {
+            return response()->json([
+                "code" => 500,
+                "message" => "fail"
+            ], 500);
         }
     }
 

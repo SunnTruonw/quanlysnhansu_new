@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="card-tool p-3 text-right">
-                                <button type="submit" class="btn btn-primary btn-lg">Chấp nhận</button>
+                                <button type="submit" @if($authCheck->id == $data->id || $authCheck->role == 'admin')  @else disabled  @endif class="btn btn-primary btn-lg">Chấp nhận</button>
                                 <button type="reset" class="btn btn-danger btn-lg">Làm lại</button>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
 
                                         <!-- START Hình Ảnh -->
                                         <div id="hinh_anh" class="container tab-pane fade"><br>
-                                            
+
                                         </div>
                                         <!-- END Hình Ảnh -->
 
@@ -160,3 +160,4 @@
 @section('js')
 
 @endsection
+

@@ -26,9 +26,9 @@ class ValidateAddUser extends FormRequest
     {
         $rules =  [
             'name' => 'required|max:255',
-            "avatar_path" => "mimes:jpeg,jpg,png,svg,webp|nullable|file|max:3000",
-            "image_path" => "mimes:jpeg,jpg,png,svg,webp|nullable|file|max:3000",
-            "file" => "nullable|file|max:3000",
+            "avatar_path" => "mimes:jpeg,jpg,png,svg,webp|nullable|file|max:1000",
+            "image_path" => "mimes:jpeg,jpg,png,svg,webp|nullable|file|max:1000",
+            "file" => "nullable|file|max:1000",
             "active" => "required",
             "sex" => "required",
             "address" => "required",
@@ -36,11 +36,12 @@ class ValidateAddUser extends FormRequest
             'password'         => 'required|min:8',
             'confirm-password' => 'required|same:password',
             'phone' => 'required',
-            "date_working" => "required",
+            "date_working" => "required|date_format:Y/m/d|after:yesterday",
             "date_off" => "nullable",
             "order" => "nullable|numeric",
             'district_id' => 'required',
             'city_id' => 'required',
+            'room_id' => 'required',
         ];
 
         return $rules;
@@ -69,10 +70,12 @@ class ValidateAddUser extends FormRequest
             // "phone.min" => "Số điện thoại không hợp lệ",
             "phone.numeric" => "Số điện thoại không hợp lệ",
             "date_working.required" => "Ngày vào làm không được bỏ trống",
+            "date_working.date_format" => "Ngày làm không hợp lệ",
+            "date_working.after" => "Ngày làm không hợp lệ",
             "order.numeric" => "Số thứ tự không hợp lệ",
             'city_id.required' => 'Vui lòng chọn Tỉnh/thành phố',
             'district_id.required' => 'Vui lòng chọn Quận/huyện',
-
+            'room_id.required' => 'Bạn chưa chọn phòng ban',
         ];
     }
 }

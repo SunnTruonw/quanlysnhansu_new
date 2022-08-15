@@ -63,7 +63,6 @@ class User extends Authenticatable
         return $this->docmments()->first()->content ?? '';
     }
 
-
     // tạo thêm thuộc tính date_working
     public function getDateWorkingAttribute()
     {
@@ -81,7 +80,7 @@ class User extends Authenticatable
     {
         return $this->docmments()->first()->image_path ?? '';
     }
-    
+
     public function docmments()
     {
         return $this->hasMany(Documment::class, "user_id", "id");

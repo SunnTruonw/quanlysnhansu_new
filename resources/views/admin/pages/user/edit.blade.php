@@ -18,13 +18,14 @@
                     {{session("error")}}
                 </div>
                 @endif
+                <div class="log"></div>
                 <form class="form-horizontal" action="{{route('admin.user.update',[$data->id])}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card-header">
                                 @foreach ($errors->all() as $message)
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                 @endforeach
                              </div>
                         </div>
@@ -83,11 +84,11 @@
                                                             </div>
                                                         </div>
                                                     </div>
-    
+
                                                     <div class="form-group row">
                                                         <label for="" class="col-sm-2">Tỉnh/TP <strong>*</strong></label>
                                                         <div class="col-sm-10">
-                                                            <select name="city_id" id="city" class="form-control @error('city_id') is-invalid   @enderror" data-url="{{ route('ajax.address.districts') }}" required="required">
+                                                            <select name="city_id" id="city" class="form-control @error('city_id') is-invalid   @enderror" data-url="{{ route('ajax.address.districts') }}">
                                                                 <option value="">Chọn tỉnh/Thành phố</option>
                                                                 {{-- {!! $cities !!} --}}
                                                                 @foreach ($dataCity as $city)
@@ -102,7 +103,7 @@
                                                     <div class="form-group row">
                                                         <label for="" class="col-sm-2">Quận/huyện <strong>*</strong></label>
                                                         <div class="col-sm-10">
-                                                            <select name="district_id" id="district" class="form-control    @error('district_id') is-invalid   @enderror"   required="required">
+                                                            <select name="district_id" id="district" class="form-control    @error('district_id') is-invalid   @enderror" >
                                                                 <option value="">Chọn quận/huyện</option>
                                                                 <option value="{{$data->district_id}}" selected>{{$data->district->name ?? ''}}</option>
                                                             </select>
@@ -110,10 +111,10 @@
                                                                 <div class="invalid-feedback"><strong>{{ $message }}</strong></div>
                                                             @enderror
                                                         </div>
-    
-                                                        
+
+
                                                     </div>
-    
+
                                                     <div class="form-group">
                                                         <div class="row">
                                                             <label for="" class="col-sm-2">Địa chỉ</label>
@@ -127,7 +128,7 @@
                                                         </div>
                                                     </div>
 
-    
+
                                                     <div class="form-group">
                                                         <div class="row">
                                                             <label for="" class="col-sm-2">Mô tả</label>
@@ -194,7 +195,7 @@
 
                                         <!-- START Hình Ảnh -->
                                         <div id="hinh_anh" class="container tab-pane fade"><br>
-                                            <div class="wrap-load-image mb-3">
+                                            <div class="wrap-load-images mb-3">
                                                 <div class="form-group">
                                                     <label for="">File tài liệu</label>
                                                     <input value="{{ $data->file }}" type="file" class="form-control-file img-load-input border @error('file')
@@ -205,7 +206,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                            
+
                                         </div>
                                         <!-- END Hình Ảnh -->
 
@@ -219,7 +220,6 @@
                                     <h3 class="card-title">Thông tin khác</h3>
                                  </div>
                                  <div class="card-body table-responsive p-3">
-
                                     @if(isset($categoriesM) && $categoriesM)
                                         @foreach ($categoriesM as $key=> $category)
                                             <div class="form-group">
@@ -251,7 +251,7 @@
 
                                     <div class="form-group">
                                         <label class="control-label" for="">Chọn phòng ban</label>
-                                        <select class="form-control" name="room_id">
+                                        <select class="form-control custom-select select-2-init" name="room_id">
                                             <option value="">--Chọn phòng ban--</option>
                                             @if(isset($rooms) && $rooms)
                                                 @foreach ($rooms as $room)
@@ -259,6 +259,9 @@
                                                 @endforeach
                                             @endif
                                         </select>
+                                        @error('room_id')
+                                        <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
+                                        @enderror
                                     </div>
 
                                     <div class="form-group">
@@ -390,18 +393,18 @@
 
                         <div class="form-group">
                             <div class="row">
-                                <label for="password" class="col-md-3">Mật khẩu</label>
+                                <label for="old_password" class="col-md-3">Mật khẩu cũ</label>
                                 <div class="col-md-9">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Nhập mật khẩu">
-                                    @error('password')
+                                    <input id="old_password" type="password" class="form-control @error('old_password') is-invalid @enderror" name="old_password" placeholder="Nhập mật khẩu cũ">
+                                    @error('old_password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
-                                    <div class="form-err" id="errorPassword" style="display: none;">
-                                        <div class="alert alert-danger-cus alert-des ">
+                                    <div class="form-err" id="errorOldPassword" style="display: none;">
+                                        <div class="alert-danger-cus alert-des ">
                                             <i class="fa fa-minus" aria-hidden="true"></i>
-                                            <span class="text-password-error">Mật khẩu > 8 ký tự</span>
+                                            <span class="text-old_password-error">Mật khẩu > 8 ký tự</span>
                                         </div>
                                     </div>
                                 </div>
@@ -411,26 +414,44 @@
 
                         <div class="form-group">
                             <div class="row">
-                                <label for="confirm-password" class="col-md-3">Nhập lại mật khẩu</label>
+                                <label for="new_password" class="col-md-3">Mật khẩu</label>
                                 <div class="col-md-9">
-                                    <input id="confirm-password" type="password" class="form-control @error('confirm-password') is-invalid @enderror" name="confirm-password" placeholder="Nhập lại mật khẩu">
-                                    @error('confirm-password')
+                                    <input id="new_password" type="password" class="form-control @error('new_password') is-invalid @enderror" name="new_password" placeholder="Nhập mật khẩu">
+                                    @error('new_password')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                    <div class="form-err" id="errorNewPassword" style="display: none;">
+                                        <div class="alert-danger-cus alert-des ">
+                                            <i class="fa fa-minus" aria-hidden="true"></i>
+                                            <span class="text-new_password-error">Mật khẩu > 8 ký tự</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <label for="confirm_password" class="col-md-3">Nhập lại mật khẩu</label>
+                                <div class="col-md-9">
+                                    <input id="confirm_password" type="password" class="form-control @error('confirm_password') is-invalid @enderror" name="confirm_password" placeholder="Nhập lại mật khẩu">
+                                    @error('confirm_password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
                                     <div class="form-err" id="errorConfirmPassword" style="display: none;">
-                                        <div class="alert alert-danger-cus alert-des ">
+                                        <div class="alert-danger-cus alert-des ">
                                             <i class="fa fa-minus" aria-hidden="true"></i>
-                                            <span class="text-confirm-password-error">Mật khẩu > 8 ký tự</span>
+                                            <span class="text-confirm_password-error">Mật khẩu > 8 ký tự</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="registrationFormAlert" id="divCheckPasswordMatch">
-
                     </div>
                     <div class="modal-footer">
                         <div class="text-center col-12">
@@ -442,7 +463,7 @@
             </div>
         </div>
     </div>
-    
+
 @endsection
 @section('js')
 <script>
@@ -450,27 +471,28 @@
         $('#changePasswordAction').attr('action', $(this).attr('data-action'));
     });
 
-    $(document).on('keyup', '#password', function(){
+    $(document).on('keyup', '#new_password', function(){
         if($(this).val().length > 0){
             if($(this).val().length < 8){
-                $('.text-password-error').text('Mật khẩu > 8 ký tự');
-                $('#errorPassword').show();
-                $('#errorPassword').parent().children().addClass('is-invalid');
+                $('.text-new_password-error').text('Mật khẩu > 8 ký tự');
+                $('#errorNewPassword').show();
+                $('#errorNewPassword').parent().children().addClass('is-invalid');
             }else{
-                $('#errorPassword').hide();
-                $('#errorPassword').parent().children().removeClass('is-invalid');
+                $('#errorNewPassword').hide();
+                $('#errorNewPassword').parent().children().removeClass('is-invalid');
             }
         }else{
-            $('.text-password-error').text('Thông tin bắt buộc');
-            $('#errorPassword').show();
-            $('#errorPassword').parent().children().addClass('is-invalid');
+            $('.text-new_password-error').text('Thông tin bắt buộc');
+            $('#errorNewPassword').show();
+            $('#errorNewPassword').parent().children().addClass('is-invalid');
         }
     });
 
-    $(document).on('keyup', '#confirm-password', function(){
+    $(document).on('keyup', '#confirm_password', function(){
         if($(this).val().length > 0){
             if($(this).val().length < 8){
-                $('.text-confirm-password-error').text('Mật khẩu > 8 ký tự');
+
+                $('.text-confirm_password-error').text('Mật khẩu > 8 ký tự');
                 $('#errorConfirmPassword').show();
                 $('#errorConfirmPassword').parent().children().addClass('is-invalid');
             }else{
@@ -478,51 +500,82 @@
                 $('#errorConfirmPassword').parent().children().removeClass('is-invalid');
             }
         }else{
-            $('.text-confirm-password-error').text('Thông tin bắt buộc');
+            $('.text-confirm_password-error').text('Thông tin bắt buộc');
             $('#errorConfirmPassword').show();
             $('#errorConfirmPassword').parent().children().addClass('is-invalid');
         }
     });
 
-    function validateCreateRegister (password,confirmPassword)
-	{
-		if(password == '' || password.length < 8){
-            $('#errorPassword').show();
-            var errorPassword = false;
-        }else{
-            if(password.length < 8){
-                $('.text-password-error').text('Mật khẩu > 8 ký tự');
-                $('#errorPassword').show();
-                var errorPassword = false;
+    $(document).on('keyup', '#old_password', function(){
+        if($(this).val().length > 0){
+
+            if($(this).val().length < 8){
+                $('.text-old_password-error').text('Mật khẩu > 8 ký tự');
+                $('#errorOldPassword').show();
+                $('#errorOldPassword').parent().children().addClass('is-invalid');
+            }else{
+                $('#errorOldPassword').hide();
+                $('#errorOldPassword').parent().children().removeClass('is-invalid');
             }
-            else if(password != confirmPassword){
-                var errorPassword = false;
+        }else{
+            $('.text-old_password-error').text('Thông tin bắt buộc');
+            $('#errorOldPassword').show();
+            $('#errorOldPassword').parent().children().addClass('is-invalid');
+        }
+    });
+
+    function validateCreateRegister (new_password,confirmPassword,old_password)
+	{
+
+        if(old_password == '' || old_password.length < 8){
+            $('#errorOldPassword').show();
+            var errorOldPassword = false;
+        }else{
+            if(old_password.length < 8){
+                $('.text-old_password-error').text('Mật khẩu > 8 ký tự');
+                $('#errorOldPassword').show();
+                var errorOldPassword = false;
             }
             else{
-                $('#errorPassword').hide();
+                $('#errorOldPassword').hide();
             }
         }
 
-		if(confirmPassword == '' || confirmPassword.length < 8){
-            $('#errorConfirmPassword').show();
-            var errorConfirmPassword = false;
+
+		if(new_password == '' || new_password.length < 8){
+            $('#errorNewPassword').show();
+            var errorNewPassword = false;
+        }else{
+            if(new_password.length < 8){
+                $('.text-new_password-error').text('Mật khẩu > 8 ký tự');
+                $('#errorNewPassword').show();
+                var errorNewPassword = false;
+            }
+            else if(new_password != confirmPassword){
+                var errorNewPassword = false;
+            }
+            else{
+                $('#errorNewPassword').hide();
+            }
         }
-        else if(password != confirmPassword){
+
+
+
+		if(confirmPassword == '' || confirmPassword.length < 8){
+
             $('#errorConfirmPassword').show();
-            $('.text-confirm-password-error').text('Mật khẩu không khớp với mật khẩu trên');
+            $('.text-confirm_password-error').text('Mật khẩu > 8 ký tự');
+            var errorConfirmPassword = false;
+        }else if(new_password != confirmPassword){
+            $('#errorConfirmPassword').show();
+            $('.text-confirm_password-error').text('Mật khẩu không khớp với mật khẩu trên');
             var errorConfirmPassword = false;
             }
         else{
-            if(confirmPassword.length < 8){
-                $('.text-password-error').text('Mật khẩu > 8 ký tự');
-                $('#errorConfirmPassword').show();
-                var errorConfirmPassword = false;
-            }else{
-                $('#errorConfirmPassword').hide();
-            }
+            $('#errorConfirmPassword').hide();
         }
-		
-		if(errorPassword == false || errorConfirmPassword == false){
+
+		if(errorNewPassword == false || errorConfirmPassword ==  false || errorOldPassword == false){
 			return false;
 		}
 	}
@@ -530,15 +583,18 @@
 
     $("#changePasswordAction").on("submit", function () {
 
-        let password = $('#password').val();
-        let confirmPassword = $('#confirm-password').val();
+        let new_password = $('#new_password').val();
+        let confirmPassword = $('#confirm_password').val();
+        let old_password = $('#old_password').val();
 
-        
-        var validate = validateCreateRegister(password, confirmPassword);
+        // console.log(new_password,confirmPassword,old_password);
+        var validate = validateCreateRegister(new_password, confirmPassword, old_password);
 
         if(validate == false){
             return false;
         }
+
+
     });
 
 </script>

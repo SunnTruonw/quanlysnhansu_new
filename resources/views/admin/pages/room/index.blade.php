@@ -103,8 +103,8 @@
                                         {{$item->description}}
                                     </td>
 
-                                    <td class="wrap-load-active">
-                                        <a  class="btn btn-sm {{$item->active==1?'btn-success':'btn-warning'}} lb-active" style="width:50px;">{{$item->active==1?'Hiện':'Ẩn'}}</a>
+                                    <td class="wrap-load-active @if($authCheck->id == $item->id || $authCheck->role == 'admin')  @else unselectable  @endif" data-url="{{ route('admin.room.load.active',['id'=>$item->id]) }}">
+                                        @include('admin.components.load-change-active-room',['data'=>$item,'type'=>'phòng ban'])
                                     </td>
                                     <td>
                                         <a href="{{route('admin.room.edit',['id'=>$item->id])}}" class="btn btn-sm btn-info"><i class="fas fa-edit"></i></a>
@@ -123,7 +123,7 @@
       </div>
     </div>
   </div>
-  
+
 
 @endsection
 @section('js')

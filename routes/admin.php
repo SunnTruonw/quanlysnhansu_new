@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 //Login, Logout
 Route::get('admin/login', [Auth\AdminLoginController::class, 'showLoginForm'])->name("admin.login");
 Route::get('admin/logout', [Auth\AdminLoginController::class, 'logout'])->name("admin.logout");
@@ -26,6 +28,9 @@ Route::post('admin/loginSubmit', [Auth\AdminLoginController::class, 'login'])->n
 Route::get('admin/active-user', [Auth\AdminLoginController::class, 'showActiveUserForm'])->name("admin.active-user.index");
 Route::get('admin/load-active-user/{id}', [Auth\AdminLoginController::class, 'loadActiveUser'])->name("admin.user.load.role");
 Route::post('admin/change-password/{id}', [Auth\AdminLoginController::class, 'changePassword'])->name("admin.changePassword.update");
+Route::get('/apiBieuDo', [Admin\AdminHomeController::class, 'apiBieuDo'])->name("admin.apiBieuDo");
+Route::get('/user-rooms', [Admin\AdminHomeController::class, 'userRooms'])->name("admin.userRooms");
+
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function () {
 
@@ -75,6 +80,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
         Route::get('/edit/{id}', [Admin\AdminRoomController::class, 'edit'])->name("admin.room.edit");
         Route::post('/update/{id}', [Admin\AdminRoomController::class, 'update'])->name("admin.room.update");
         Route::get('/delete/{id}', [Admin\AdminRoomController::class, 'delete'])->name("admin.room.delete");
+
+        Route::get('/load-active/{id}', [Admin\AdminRoomController::class, 'loadActive'])->name("admin.room.load.active");
+
     });
 });
 
