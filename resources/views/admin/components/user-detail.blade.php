@@ -1,3 +1,12 @@
+@php
+    try {
+        $data->email = \Crypt::decrypt($data->email);
+        $data->phone = \Crypt::decrypt($data->phone);
+    } catch(\RuntimeException $e) {
+        $data->email;
+        $data->phone;
+    }
+@endphp
 <section style="background-color: #eee;">
     <div class="container py-5">
         <div class="row">
