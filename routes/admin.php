@@ -4,7 +4,9 @@
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Ajax;
 use App\Http\Controllers\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\Console\Input\Input;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,10 +31,14 @@ Route::get('admin/active-user', [Auth\AdminLoginController::class, 'showActiveUs
 Route::get('admin/load-active-user/{id}', [Auth\AdminLoginController::class, 'loadActiveUser'])->name("admin.user.load.role");
 Route::post('admin/change-password/{id}', [Auth\AdminLoginController::class, 'changePassword'])->name("admin.changePassword.update");
 Route::get('/apiBieuDo', [Admin\AdminHomeController::class, 'apiBieuDo'])->name("admin.apiBieuDo");
+<<<<<<< HEAD
 Route::get('/user-rooms', [Admin\AdminHomeController::class, 'userRooms'])->name("admin.userRooms");
 
+=======
+>>>>>>> b95510ecd4b2df74459265c0329df7357b542a63
 
-Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function () {
+
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
     Route::get('/', [Admin\AdminHomeController::class, 'index'])->name("admin.index");
 
@@ -84,5 +90,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
         Route::get('/load-active/{id}', [Admin\AdminRoomController::class, 'loadActive'])->name("admin.room.load.active");
 
     });
+
 });
 

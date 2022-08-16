@@ -22,3 +22,15 @@ class DatabaseSeeder extends Seeder
         ]);
     }
 }
+
+
+// http://192.168.1.17:8080/quanlysnhansu_demo/public/admin
+// tk: test@gmail.com
+// mk: 123456789
+
+// http://192.168.1.17:8080/phpmyadmin/
+
+// https://github.com/SunnTruonw/quanlynhansu
+
+
+

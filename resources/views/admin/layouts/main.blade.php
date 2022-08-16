@@ -32,8 +32,16 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{asset('admin_asset/plugins/summernote/summernote-bs4.min.css')}}">
 
+  <!--  Biểu đồ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- End -->
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
 <script src="https://cdn.tailwindcss.com"></script>
+<<<<<<< HEAD
+=======
+
+>>>>>>> b95510ecd4b2df74459265c0329df7357b542a63
 </head>
 
 <style>
@@ -173,6 +181,7 @@
 <script src="{{asset('admin_asset/dist/js/pages/dashboard.js')}}"></script>
 
 
+<<<<<<< HEAD
 {{-- <link href="css/plugins/morris.css" rel="stylesheet">
 <!-- jQuery -->
 <script src="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.0/morris.js"></script>
@@ -181,6 +190,15 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+=======
+
+<link href="css/plugins/morris.css" rel="stylesheet">
+<!-- jQuery -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.0/morris.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+
+>>>>>>> b95510ecd4b2df74459265c0329df7357b542a63
 @yield('js')
 </body>
 </html>
