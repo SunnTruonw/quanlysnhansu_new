@@ -2,7 +2,6 @@
 
 
 @section('content')
-<<<<<<< HEAD
     <section class="content">
         <div class="container-fluid">
             <!-- Info boxes -->
@@ -238,62 +237,9 @@
 
     </div><!--/. container-fluid -->
   </section>
->>>>>>> b95510ecd4b2df74459265c0329df7357b542a63
 @endsection
 
 @section('js')
-{{-- <script>
-    const ctx = document.getElementById('myChart').getContext('2d');
-    var data = <?= json_encode($data); ?>;
-    const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
-            datasets: [{
-                label: 'Thống kê nhân viên nghỉ hẳn',
-                data: data,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-</script> --}}
-
-<<<<<<< HEAD
 
     <script>
         var color = [];
@@ -406,79 +352,6 @@
         );
     </script>
 
-
-    {{-- <script>
-        $(function() {
-            // Create a function that will handle AJAX requests
-            function requestData(years, chart) {
-                $.ajax({
-                        type: "GET",
-                        dataType: 'json',
-                        url: "/apiBieuDo", // This is the URL to the API
-                        data: {
-                            years: years
-                        }
-                    })
-                    .done(function(data) {
-                        // When the response to the AJAX request comes back render the chart with new data
-                        chart.setData(data);
-                    })
-                    .fail(function() {
-                        // If there is no communication between the server, show an error
-                        alert("error occured");
-                    });
-            }
-
-            function requestDataUserRooms(chartUserRoom) {
-                $.ajax({
-                        type: "GET",
-                        dataType: 'json',
-                        url: "/user-rooms", // This is the URL to the API
-                    })
-                    .done(function(data) {
-                        console.log(data);
-                        // When the response to the AJAX request comes back render the chart with new data
-                        chart.setData(data);
-                    })
-                    .fail(function() {
-                        // If there is no communication between the server, show an error
-                        alert("error occured");
-                    });
-            }
-
-            var chartUserRoom = Morris.Bar({
-                // ID of the element in which to draw the chart.
-                element: 'stats-container-user-rooms',
-                data: [0, 0], // Set initial data (ideally you would provide an array of default data)
-                xkey: 'nameRoom', // Set the key for X-axis
-                ykeys: ['value'], // Set the key for Y-axis
-                labels: ['users'] // Set the label when bar is rolled over
-            });
-
-            var chart = Morris.Bar({
-                // ID of the element in which to draw the chart.
-                element: 'stats-container',
-                data: [0, 0], // Set initial data (ideally you would provide an array of default data)
-                xkey: 'getYear', // Set the key for X-axis
-                ykeys: ['value'], // Set the key for Y-axis
-                labels: ['users'] // Set the label when bar is rolled over
-            });
-
-
-            // Request initial data for the past 7 years:
-            requestData(5, chart);
-            requestDataUserRooms(chart);
-            $('ul.ranges a').click(function(e) {
-                e.preventDefault();
-                // Get the number of years from the data attribute
-                var el = $(this);
-                years = el.attr('data-range');
-                // Request the data and render the chart using our handy function
-                requestData(years, chart);
-            })
-        });
-    </script> --}}
-=======
 <script>
     Morris.Bar({
       element: 'chart',
@@ -496,53 +369,4 @@
 
 </script>
 
-
-<script>
-    $(function() {
-
-      // Create a function that will handle AJAX requests
-      function requestData(days, chart){
-        $.ajax({
-          type: "GET",
-          dataType: 'json',
-          url: "/apiBieuDo", // This is the URL to the API
-          data: { days: days }
-        })
-        .done(function( data ) {
-          // When the response to the AJAX request comes back render the chart with new data
-          chart.setData(data);
-        })
-        .fail(function() {
-          // If there is no communication between the server, show an error
-          alert( "error occured" );
-        });
-      }
-
-      var chart = Morris.Bar({
-        // ID of the element in which to draw the chart.
-        element: 'stats-container',
-        data: [0, 0], // Set initial data (ideally you would provide an array of default data)
-        xkey: 'date', // Set the key for X-axis
-        ykeys: ['value'], // Set the key for Y-axis
-        labels: ['Orders'] // Set the label when bar is rolled over
-      });
-
-      // Request initial data for the past 7 days:
-    //   requestData(7, chart);
-
-      $('ul.ranges a').click(function(e){
-        e.preventDefault();
-
-        // Get the number of days from the data attribute
-        var el = $(this);
-        days = el.attr('data-range');
-
-        // Request the data and render the chart using our handy function
-        requestData(days, chart);
-      })
-    });
-    </script>
-
-
->>>>>>> b95510ecd4b2df74459265c0329df7357b542a63
 @endsection

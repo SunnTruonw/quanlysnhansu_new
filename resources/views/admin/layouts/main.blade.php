@@ -38,10 +38,6 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
 <script src="https://cdn.tailwindcss.com"></script>
-<<<<<<< HEAD
-=======
-
->>>>>>> b95510ecd4b2df74459265c0329df7357b542a63
 </head>
 
 <style>
@@ -190,7 +186,6 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-=======
 
 <link href="css/plugins/morris.css" rel="stylesheet">
 <!-- jQuery -->
@@ -198,7 +193,6 @@
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 
->>>>>>> b95510ecd4b2df74459265c0329df7357b542a63
 @yield('js')
 </body>
 </html>

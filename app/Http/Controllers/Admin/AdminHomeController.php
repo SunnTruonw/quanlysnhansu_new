@@ -50,7 +50,7 @@ class AdminHomeController extends Controller
 
 
 
-        // thống kê số nhân viên nhiên nghỉ nhiều nhất trong tháng
+        // thống kê số nhân viên nhiên trong tháng
         $userLeave = Leave::select(DB::raw('COUNT(*) as count'),)
             // ->whereYear('time_leave', $time)
             ->whereIn(DB::raw('MONTH(time_leave)'), $arrayMonth)
