@@ -36,8 +36,10 @@ class ValidateAddUser extends FormRequest
             'password'         => 'required|min:8',
             'confirm-password' => 'required|same:password',
             'phone' => 'required',
-            "date_working" => "required|date_format:Y/m/d|after:yesterday",
-            "date_off" => "nullable",
+
+            "date_working" => "required",
+            "date_off" => "nullable|after:date_working",
+
             "order" => "nullable|numeric",
             'district_id' => 'required',
             'city_id' => 'required',
@@ -70,8 +72,7 @@ class ValidateAddUser extends FormRequest
             // "phone.min" => "Số điện thoại không hợp lệ",
             "phone.numeric" => "Số điện thoại không hợp lệ",
             "date_working.required" => "Ngày vào làm không được bỏ trống",
-            "date_working.date_format" => "Ngày làm không hợp lệ",
-            "date_working.after" => "Ngày làm không hợp lệ",
+            "date_off.after" => "Ngày nghỉ việc phải lớn hơn ngày vào làm",
             "order.numeric" => "Số thứ tự không hợp lệ",
             'city_id.required' => 'Vui lòng chọn Tỉnh/thành phố',
             'district_id.required' => 'Vui lòng chọn Quận/huyện',

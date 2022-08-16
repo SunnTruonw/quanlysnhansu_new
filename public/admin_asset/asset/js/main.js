@@ -275,30 +275,17 @@ $(function() {
         });
     });
 
-    // js load change trạng thái hot và role
-    // $(document).on('click', '.lb-role-ckeck', function(event) {
-    //     event.preventDefault();
-    //     let wrapActive = $(this).parents('.wrap-load-role');
-    //     let urlRequest = wrapActive.data("url");
-
-
-    //     $.ajax({
-    //         type: "GET",
-    //         url: urlRequest,
-    //         success: function(data) {
-    //             if (data.code == 200) {
-    //                 Swal.fire({
-    //                     title: 'Vui lòng đợi Admin duyệt',
-    //                     icon: 'warning',
-    //                     showCancelButton: true,
-    //                     confirmButtonColor: '#3085d6',
-    //                     cancelButtonColor: '#d33',
-    //                     confirmButtonText: 'Yes, next step!'
-    //                 })
-    //             }
-    //         }
-    //     });
-    // });
+    $(document).on('click', '.no-quyen', function(event) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Bạn không có quyền sửa',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, next step!'
+        });
+    });
 
 
 

@@ -8,7 +8,7 @@ class AddressHelper
     {
 
     }
-    
+
     public function cities($data,$id = null, $startString = "")
     {
         foreach ($data as $value) {
@@ -23,11 +23,17 @@ class AddressHelper
             }
         }
         return $startString;
+
+        // $html = view('admin.components.load-select-address', compact('data','id'))->render();
+
+        // return response()->json([
+        //     'startString' => $html,
+        // ]);
     }
 
     public function districts($data,$cityId,$id=null,$startString=""){
         foreach ($data as $value) {
-            
+
             if ($id !== null) {
                 if ($value['id'] == $id) {
                     $startString .= "<option value='" . $value['id'] . "' " . 'selected' . ">" . $value["name"] . "</option>";
@@ -40,5 +46,10 @@ class AddressHelper
 
         }
         return $startString;
+
+        // $html = view('admin.components.load-select-address', compact('data', 'id'))->render();
+        // return response()->json([
+        //     'startString' => $html,
+        // ]);
     }
 }

@@ -1,1 +1,1 @@
-<a  class="btn btn-sm {{$data->active==1?'btn-success':'btn-warning'}} @if($authCheck->id == $data->id || $authCheck->role == 'admin') lb-active @else unselectable @endif" data-value="{{$data->active}}" data-type="{{$type?$type:''}}">{{$data->active==1?'Hiển thị':'Ẩn'}}</a>
+<a style="width: 70px;"  class="btn btn-sm {{$data->active==1?'btn-success':'btn-warning'}} @if($authCheck->id == $data->id || $authCheck->role == 'admin') lb-active @else unselectable @endif" data-value="{{$data->active}}" data-type="{{$type?$type:''}}">{{$data->active==1?'Hiển thị':'Ẩn'}}</a>

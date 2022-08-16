@@ -75,7 +75,7 @@
                                                     <div class="row">
                                                         <label for="" class="col-sm-2">Số điện thoại</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control
+                                                            <input type="phone" class="form-control
                                                             @error('phone') is-invalid @enderror" id="phone" value="{{ old('phone') }}" name="phone" placeholder="Nhập sô điện thoại">
                                                             @error('phone')
                                                                 <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
@@ -241,7 +241,7 @@
 
                                     <div class="form-group">
                                         <label class="control-label" for="">Giới tính</label>
-                                        <select class="form-control"   name="sex" id="sex">
+                                        <select class="form-control" name="sex" id="sex">
                                             <option value="">--Giới tính--</option>
                                             <option @if (old('sex')) {{ old('sex')?'selected':"" }} @endif value="1">Nam</option>
                                             <option @if (old('sex')) {{ old('sex')?'selected':"" }} @endif value="0">Nữ</option>
@@ -339,7 +339,7 @@
                                             <div class="row">
                                                 <label for="password" class="col-md-3">Mật khẩu</label>
                                                 <div class="col-md-9">
-                                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Nhập mật khẩu">
+                                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{old('password')}}" placeholder="Nhập mật khẩu">
                                                     @error('password')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
@@ -354,7 +354,7 @@
                                             <div class="row">
                                                 <label for="confirm-password" class="col-md-3">Nhập lại mật khẩu</label>
                                                 <div class="col-md-9">
-                                                    <input id="confirm-password" type="password" class="form-control @error('confirm-password') is-invalid @enderror" name="confirm-password" placeholder="Nhập lại mật khẩu" >
+                                                    <input id="confirm-password" type="password" class="form-control @error('confirm-password') is-invalid @enderror" name="confirm-password" value="{{old('confirm-password')}}" placeholder="Nhập lại mật khẩu" >
                                                     @error('confirm-password')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>

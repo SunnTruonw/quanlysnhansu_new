@@ -114,6 +114,7 @@
                                     <th>Hành động</th>
                                 </tr>
                           </thead>
+
                           <tbody>
                               @foreach($data as $item)
                                   {{-- {{dd($item->category)}} --}}
@@ -121,6 +122,15 @@
                                     <td>{{$loop->index}}</td>
                                     <td>{{$item->user_code}}</td>
                                     <td>{{$item->name}}</td>
+                                    @php
+                                        try {
+                                            $item->email = \Crypt::decrypt($item->email);
+                                            $item->phone = \Crypt::decrypt($item->phone);
+                                        } catch(\RuntimeException $e) {
+                                            $item->email;
+                                            $item->phone;
+                                        }
+                                    @endphp
                                     <td>{{$item->email}}</td>
                                     <td>{{$item->phone}}</td>
 

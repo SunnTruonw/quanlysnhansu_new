@@ -28,6 +28,7 @@ class AdminRoomController extends Controller
     public function index(Request $request)
     {
         $authCheck = Auth::user();
+        $where = [];
 
         $data  = $this->room;
         if ($request->input('keyword')) {
@@ -38,14 +39,35 @@ class AdminRoomController extends Controller
             });
         }
 
-        $data = $data->where('active', 1)->orderBy('created_at','desc')->latest()->paginate(15);
+        if ($request->has('fill_action') && $request->input('fill_action')) {
+            $key = $request->input('fill_action');
 
-        $totalCategory = $this->room->where('active', 1)->count();
+            switch ($key) {
+                case 'active':
+                    $where[] = ['active', '=', 1];
+                    break;
+                case 'no_active':
+                    $where[] = ['active', '=', 0];
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if ($where) {
+            $data = $data->where($where);
+        }
+
+        $data = $data->orderBy('created_at','desc')->latest()->paginate(15);
+
+        $totalCategory = $this->room->count();
         return view('admin.pages.room.index',[
             'data' => $data,
             'authCheck' => $authCheck,
             'totalCategory' => $totalCategory,
             'keyword' => $request->input('keyword') ?? '',
+            'fill_action' => $request->input('fill_action') ? $request->input('fill_action') : "",
+
         ]);
     }
 
@@ -147,10 +169,11 @@ class AdminRoomController extends Controller
         ]);
 
         $room   =  $this->room->find($id);
+
         if ($updateResult) {
             return response()->json([
                 "code" => 200,
-                "html" => view('admin.components.load-change-active', ['data' => $room, 'type' => 'phòng ban', 'authCheck' => $authCheck])->render(),
+                "html" => view('admin.components.load-change-active-room', ['data' => $room, 'type' => 'phòng ban', 'authCheck' => $authCheck])->render(),
                 "message" => "success"
             ], 200);
         } else {
@@ -166,3 +189,4 @@ class AdminRoomController extends Controller
         return $this->deleteTrait($this->room, $id);
     }
 }
+

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Dashboard</title>
+  <title>Quản lý nhân sự</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -93,6 +93,12 @@
     ul.lb_list_category{
         font-size: 16px;
     }
+    .btn.btn-primary.btn-sm{
+        color: #fff !important;
+    }
+    .nav-tabs .nav-link{
+        color: #000;
+    }
 </style>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -177,8 +183,6 @@
 <script src="{{asset('admin_asset/dist/js/pages/dashboard.js')}}"></script>
 
 
-<<<<<<< HEAD
-{{-- <link href="css/plugins/morris.css" rel="stylesheet">
 <!-- jQuery -->
 <script src="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.0/morris.js"></script>
 
@@ -187,7 +191,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<link href="css/plugins/morris.css" rel="stylesheet">
+<link href="css/plugins/morris.css" rel="sty/lesheet">
 <!-- jQuery -->
 <script src="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.0/morris.js"></script>
 

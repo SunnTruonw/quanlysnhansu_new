@@ -197,6 +197,7 @@ class AdminLoginController extends Controller
         if(Auth::user()->role == 'admin'){
             $updateResult =  $user->update([
                 'role' => $roleUpdate,
+                'status' => 1
             ]);//admin update
         }else{
             $updateResult =  $user->update([

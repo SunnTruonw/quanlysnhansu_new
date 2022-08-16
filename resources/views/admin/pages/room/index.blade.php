@@ -35,30 +35,14 @@
 
                                               </div>
                                           </div>
-                                          {{-- <div class="form-group col-md-3 mb-0" style="min-width:100px;">
-                                              <select id="order" name="order_with" class="form-control">
-                                                  <option value="">-- Sắp xếp theo --</option>
-                                                  <option value="dateASC" {{ $order_with=='dateASC'? 'selected':'' }}>Ngày tạo tăng dần</option>
-                                                  <option value="dateDESC" {{ $order_with=='dateDESC'? 'selected':'' }}>Ngày tạo giảm dần</option>
-                                                  <option value="viewASC" {{ $order_with=='viewASC'? 'selected':'' }}>Lượt xem tăng dần</option>
-                                                  <option value="viewDESC" {{ $order_with=='viewDESC'? 'selected':'' }}>Lượt xem giảm dần</option>
-                                              </select>
-                                          </div>
+
                                           <div class="form-group col-md-3 mb-0" style="min-width:100px;">
                                               <select id="" name="fill_action" class="form-control">
                                                   <option value="">-- Lọc --</option>
-                                                  <option value="hot" {{ $fill_action=='hot'? 'selected':'' }}>Dịch vụ hot</option>
-                                                  <option value="no_hot" {{ $fill_action=='no_hot'? 'selected':'' }}>Dịch vụ không hot</option>
-                                                  <option value="active" {{ $fill_action=='active'? 'selected':'' }}>Dịch vụ hiển thị</option>
-                                                  <option value="no_active" {{ $fill_action=='no_active'? 'selected':'' }}>Dịch vụ bị ẩn</option>
+                                                  <option value="active" {{ $fill_action=='active'? 'selected':'' }}>Hiển thị</option>
+                                                  <option value="no_active" {{ $fill_action=='no_active'? 'selected':'' }}>Ẩn</option>
                                               </select>
                                           </div>
-                                          <div class="form-group col-md-3 mb-0" style="min-width:100px;">
-                                              <select id="categoryProduct" name="category" class="form-control">
-                                                  <option value="">-- Tất cả danh mục --</option>
-                                                  {!!$option!!}
-                                              </select>
-                                          </div> --}}
                                       </div>
                                   </div>
 

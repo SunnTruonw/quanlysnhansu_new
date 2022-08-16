@@ -3,7 +3,15 @@
 @section('content')
 
 @include('admin.partials.content-header',['name'=>"Nhân viên","key"=>"Sửa nhân viên"])
-
+@php
+    try {
+        $data->email = \Crypt::decrypt($data->email);
+        $data->phone = \Crypt::decrypt($data->phone);
+    } catch(\RuntimeException $e) {
+        $data->email;
+        $data->phone;
+    }
+@endphp
 <!-- Main content -->
 <div class="content">
     <div class="container-fluid">
@@ -76,7 +84,7 @@
                                                         <div class="row">
                                                             <label for="" class="col-sm-2">Số điện thoại</label>
                                                             <div class="col-sm-10">
-                                                                <input type="text" class="form-control
+                                                                <input type="number" class="form-control
                                                                 @error('phone') is-invalid @enderror" id="phone" value="{{ old('phone') ?? $data->phone }}" name="phone" placeholder="Nhập sô điện thoại">
                                                                 @error('phone')
                                                                     <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>

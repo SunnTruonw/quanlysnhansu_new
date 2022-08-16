@@ -18,6 +18,7 @@ use App\Traits\DeleteRecordTrait;
 use App\Traits\StorageImageTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -131,6 +132,7 @@ class AdminUserController extends Controller
 
         $data = $data->orderBy('created_at','desc')->latest()->paginate(15);
 
+        // $data = $this->user->where('id', 500006)->paginate(15);
         $totalUser = $this->user->count();
 
         return view('admin.pages.user.index',[
@@ -173,6 +175,7 @@ class AdminUserController extends Controller
 
     public function store(ValidateAddUser $request)
     {
+        // dd($request->all());
         try {
              DB::beginTransaction();
 
@@ -181,8 +184,8 @@ class AdminUserController extends Controller
             $dataUserCreate = [
                 'user_code' => $userCode,
                 'name' => $request->input('name'),
-                'email' => $request->input('email'),
-                'phone' => $request->input('phone'),
+                'email' =>  Crypt::encrypt($request->input('email')),
+                'phone' =>  Crypt::encrypt($request->input('phone')),
                 'password' => Hash::make($request->input('password')),
                 'address' => $request->input('address'),
                 'wage' => $request->input('wage'),
@@ -199,7 +202,11 @@ class AdminUserController extends Controller
                 $dataUserCreate["avatar_path"] = $dataUploadAvatar["file_path"];
             }
 
+            // dd($dataUserCreate);
+
             $user = $this->user->create($dataUserCreate);
+
+            // dd($user->email);
 
             $dataUserDocmentCreate = [];
 
@@ -246,7 +253,7 @@ class AdminUserController extends Controller
         } catch (\Exception $exception) {
             //throw $th;
             DB::rollBack();
-            dd($exception);
+            // dd($exception);
             Log::error('message' . $exception->getMessage() . 'line :' . $exception->getLine());
             return redirect()->route('admin.user.index')->with("error", "Thêm danh mục không thành công");
         }
@@ -285,8 +292,8 @@ class AdminUserController extends Controller
         try {
             $dataCategoryUpdate = [
                 'name' => $request->input('name'),
-                'email' => $request->input('email'),
-                'phone' => $request->input('phone'),
+                'email' =>  Crypt::encrypt($request->input('email')),
+                'phone' =>  Crypt::encrypt($request->input('phone')),
                 'address' => $request->input('address'),
                 'wage' => $request->input('wage'),
                 'sex' => $request->input('sex'),
