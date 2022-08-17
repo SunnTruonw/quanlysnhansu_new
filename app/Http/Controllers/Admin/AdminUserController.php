@@ -43,11 +43,34 @@ class AdminUserController extends Controller
         $this->district = $district;
         $this->category = $category;
     }
+
+    // Giải mã
+    public function decrypt($message){
+        $sifrelememetodu = "AES-128-CBC";
+        $benimsifrem = "birgul.091!birgul!";
+        $sifresicozulen = openssl_decrypt($message, $sifrelememetodu, $benimsifrem);
+        return $sifresicozulen;
+    }
+
+    // Mã hóa
+    public function encrypt($message){
+        $sifrelememetodu = "AES-128-CBC";
+        $benimsifrem = "birgul.091!birgul!";
+        $sifresicozulen = openssl_encrypt($message, $sifrelememetodu, $benimsifrem);
+        return $sifresicozulen;
+    }
+
+
     public function index(Request $request)
     {
+        // $data = $this->encrypt('sadasdasdasd');
+
+
+        // dd($data);
         $authCheck = Auth::user();
 
         $params = $request->all();
+        // dd(Crypt::encrypt($params['keyword']));
         $where = [];
         $address = new AddressHelper();
         $dataCity = $this->city->orderby('name')->get();
@@ -66,7 +89,7 @@ class AdminUserController extends Controller
                     ['user_code', 'like', '%' . $params['keyword'] . '%']
                 ])
                 ->orWhere([
-                    ['email', 'like', '%' . $params['keyword'] . '%']
+                    ['email', 'like', '%' . Crypt::encrypt($params['keyword']) . '%']
                 ])
                 ->orWhere([
                     ['phone', 'like', '%' . $params['keyword'] . '%']
