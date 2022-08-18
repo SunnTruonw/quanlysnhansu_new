@@ -212,6 +212,7 @@
                                                     @error('file')
                                                     <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
                                                     @enderror
+
                                                 </div>
                                             </div>
 

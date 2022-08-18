@@ -99,6 +99,9 @@
     .nav-tabs .nav-link{
         color: #000;
     }
+    .content-wrapper{
+        max-height: 100vh;
+    }
 </style>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">

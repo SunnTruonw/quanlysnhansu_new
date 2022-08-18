@@ -63,13 +63,10 @@ class AdminUserController extends Controller
 
     public function index(Request $request)
     {
-        // $data = $this->encrypt('sadasdasdasd');
-
-
-        // dd($data);
         $authCheck = Auth::user();
 
         $params = $request->all();
+
         // dd(Crypt::encrypt($params['keyword']));
         $where = [];
         $address = new AddressHelper();
@@ -79,7 +76,7 @@ class AdminUserController extends Controller
             $nameDistrict = $this->district->where('id', $params['district_id'])->first();
         }
 
-        $data  = $this->user;
+        $data  = $this->user->with('city','district');
 
         if (isset($params['keyword']) && $params['keyword']) {
             $data = $data->where(function ($query) use ($params) {
@@ -87,12 +84,6 @@ class AdminUserController extends Controller
                     ['name', 'like', '%' . $params['keyword'] . '%']
                 ])->orWhere([
                     ['user_code', 'like', '%' . $params['keyword'] . '%']
-                ])
-                ->orWhere([
-                    ['email', 'like', '%' . Crypt::encrypt($params['keyword']) . '%']
-                ])
-                ->orWhere([
-                    ['phone', 'like', '%' . $params['keyword'] . '%']
                 ])
                 ->orWhere([
                     ['address', 'like', '%' . $params['keyword'] . '%']
@@ -153,10 +144,18 @@ class AdminUserController extends Controller
             $data = $data->where($where);
         }
 
-        $data = $data->orderBy('created_at','desc')->latest()->paginate(15);
+
+        $data = $data->orderBy('id', 'DESC')->paginate(15);
+
+
+
+        // dd(123);
+
 
         // $data = $this->user->where('id', 500006)->paginate(15);
         $totalUser = $this->user->count();
+
+
 
         return view('admin.pages.user.index',[
             'data' => $data,
@@ -291,7 +290,7 @@ class AdminUserController extends Controller
         $dataCity = $this->city->orderby('name')->get();
         $cities = $address->cities($dataCity);
 
-        $data = $this->user->find($id);
+        $data = $this->user->with('docmments')->find($id);
 
         $categoriesM = $this->category->where('parent_id', 0)->get();
         $rooms = $this->room->limit(100)->get();

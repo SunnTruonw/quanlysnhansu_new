@@ -46,40 +46,34 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // tạo thêm thuộc tính sex
-    public function getSexAttribute()
-    {
-        return $this->docmments()->first()->sex ?? 0;
-    }
-
     // tạo thêm thuộc tính description
     public function getDescriptionAttribute()
     {
-        return $this->docmments()->first()->description ?? '';
+        return $this->docmments->first()->description ?? '';
     }
 
     // tạo thêm thuộc tính content
     public function getContentAttribute()
     {
-        return $this->docmments()->first()->content ?? '';
+        return $this->docmments->first()->content ?? '';
     }
 
     // tạo thêm thuộc tính date_working
     public function getDateWorkingAttribute()
     {
-        return $this->docmments()->first()->date_working ?? '';
+        return $this->docmments->first()->date_working ?? '';
     }
 
     // tạo thêm thuộc tính date_off
     public function getDateOffAttribute()
     {
-        return $this->docmments()->first()->date_off ?? '';
+        return $this->docmments->first()->date_off ?? '';
     }
 
     // tạo thêm thuộc tính image_path
     public function getImagePathAttribute()
     {
-        return $this->docmments()->first()->image_path ?? '';
+        return $this->docmments->first()->image_path ?? '';
     }
 
     public function docmments()

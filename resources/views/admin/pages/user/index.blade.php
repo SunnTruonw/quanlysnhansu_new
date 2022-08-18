@@ -130,6 +130,7 @@
                                             $item->email;
                                             $item->phone;
                                         }
+                                        $hashId = \Vinkla\Hashids\Facades\Hashids::encode($item->id);
                                     @endphp
                                     <td>{{$item->email}}</td>
                                     <td>{{$item->phone}}</td>
@@ -151,11 +152,10 @@
                                     </td>
 
                                     <td>
-
                                         <a href="{{route('admin.user.edit',['id'=>$item->id])}}" class="btn btn-sm btn-info"><i class="fas fa-edit"></i></a>
                                         {{-- <a  class="btn btn-sm btn-info" id="btn-load-calendar-detail" data-url="{{route('admin.user.calendar',['id'=>$item->id])}}" ><i class="far fa-calendar"></i></a>                         --}}
                                         <a  class="btn btn-sm btn-info" id="btn-load-user-detail" data-id="{{$item->id}}" data-url="{{route('admin.user.detail',['id'=>$item->id])}}" ><i class="fas fa-eye"></i></a>
-                                        <a data-url="{{route('admin.user.delete',['id'=>$item->id])}}" class="btn btn-sm btn-danger lb_delete"><i class="far fa-trash-alt"></i></a>
+                                        <a data-url="{{route('admin.user.delete',['id'=>$hashId])}}" class="btn btn-sm btn-danger lb_delete"><i class="far fa-trash-alt"></i></a>
                                     </td>
                                 </tr>
 

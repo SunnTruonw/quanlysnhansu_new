@@ -26,7 +26,7 @@ class ApiContactController extends Controller
 
     public function index()
     {
-        $data = $this->contact->paginate(15);
+        $data = Contact::orderBy('id', 'DESC')->paginate(20);
 
         return ContactResource::collection($data);
     }
@@ -81,7 +81,9 @@ class ApiContactController extends Controller
 
     public function edit(Request $request,$id)
     {
+        $data = Contact::find($id);
 
+        return ContactResource::collection($data);
     }
 
     public function update(ValidateContactRequest $request,$id)

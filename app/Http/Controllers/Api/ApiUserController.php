@@ -16,43 +16,27 @@ class ApiUserController extends Controller
 
     public function index(Request $request)
     {
-        $data = Http::get('http://192.168.1.26:8080/QLNS/public/api/users')->json();
-        $url = 'http://192.168.1.26:8080/QLNS/public/api/users?page=3';
-        // dd(Http::get($url)->effectiveUri());
-        // dd($data);
+        if($request->page > 0 && is_numeric($request->page)){
+            $currentPage = $request->page;
+        }else{
+            $currentPage = 1;
+        }
 
-        // $perPage = 9;
-        // $page = $request->input('page',1);
+        $previouPage = $currentPage - 5;
+        $nextPage = $currentPage + 5;
 
-        // $total = $query->count();
-
-
-        // $results = $query
-
+        $data = Http::get('http://192.168.1.26:8080/QLNS/public/api/users?page='. $currentPage)->json();
 
         return view('api.users.index', [
             'dataRoot' => $data,
+            'currentPage' => $currentPage ,
+            'previouPage' => $previouPage,
+            'nextPage' => $nextPage,
             'data' => $data['data'],
             'links' => $data['links'],
             'meta' => $data['meta'],
         ]);
 
-    }
-
-    public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
-    {
-        $page = $page ?: Paginator::resolveCurrentPage($pageName);
-
-        $perPage = $perPage ?: $this->model->getPerPage();
-
-        $results = ($total = $this->toBase()->getCountForPagination())
-                                    ? $this->forPage($page, $perPage)->get($columns)
-                                    : $this->model->newCollection();
-
-        return $this->paginator($results, $total, $perPage, $page, [
-            'path' => Paginator::resolveCurrentPath(),
-            'pageName' => $pageName,
-        ]);
     }
 
     public function add()
@@ -86,10 +70,14 @@ class ApiUserController extends Controller
         }
     }
 
-    // public function edit()
-    // {
-    //     return view('api.users.edit');
-    // }
+    public function edit()
+    {
+        $data = Http::get('http://192.168.1.26:8080/QLNS/public/api/users')->json();
+
+        return view('api.users.edit',[
+            'data' => $data,
+        ]);
+    }
 
 
     // public function update(Request $request)
